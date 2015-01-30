@@ -1,0 +1,12 @@
+set nocursorline
+set ignorecase smartcase    " 搜索时忽略大小写，但在有一个或以上大写字母时仍大小写敏感
+set incsearch               " 输入搜索内容时就显示搜索结果
+set hlsearch                " 搜索时高亮显示被找到的文本
+noremap! <M-j> <Down>
+noremap! <M-k> <Up>
+noremap! <M-h> <Left>
+noremap! <M-l> <Right>
+noremap! <M-a> <Home>
+noremap! <M-e> <End>
+noremap! <M-w> <C-Left>
+noremap! <M-b> <C-Right>

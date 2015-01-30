@@ -1,0 +1,1212 @@
+;;;win7 "c:\Documents and Settings\Administrator\AppData\Roaming\.emacs"
+;;;(load-file "e:/emacs-etc/basic")
+(setq debug-on-error t)
+(setq os-etc-path "d:/etc/emacs-etc/")
+(setq hunter-snippet-path "d:/etc/emacs-etc/h-snippet/")
+(setq os-plugin-path "d:/etc/emacs-plugin/")
+(setq os-git-path "d:/GitHub/")
+(setq os-new-git-path "d:/github/")
+(setq sbcl-exe-path "e:/sbcl/sbcl.exe")
+(setq everything-es-exe-path "c:/pro/es/es.exe")
+
+(add-to-list 'load-path os-plugin-path)
+(server-start)
+
+(setq max-lisp-eval-depth 50000)
+;;;;;           basic           ;;;;;;;;;;;;
+
+
+;;;---------------------------------color theme
+;;;solarized theme
+(add-to-list 'custom-theme-load-path (concat os-plugin-path "emacs-color-theme-solarized-master"))
+(load-theme 'solarized-dark t)
+;(load-theme 'solarized-light t)
+;;; quiet, please! No dinging!
+(setq visible-bell nil)
+;;;zenburn theme
+;; (add-to-list 'custom-theme-load-path (concat os-git-path "zenburn-emacs"))
+;;;tomorrow
+(add-to-list 'load-path (concat os-git-path "/color-theme-sanityinc-tomorrow"))
+(require 'color-theme-sanityinc-tomorrow)
+;M-x color-theme-sanityinc-tomorrow-day
+;M-x color-theme-sanityinc-tomorrow-night
+;M-x color-theme-sanityinc-tomorrow-eighties
+
+;;;monokai
+(add-to-list 'custom-theme-load-path (concat os-git-path "/monokai-emacs"))
+;; (load-theme 'monokai t)
+
+;;;---------------------------------font
+;(set-default-font "Source Code Pro")
+(set-face-attribute 'default nil :font "Yahei Monaco 10")
+;(set-face-attribute 'default nil :font "Source Han Sans 10")
+(defun qiang-font-existsp (font)
+  (if (null (x-list-fonts font)) nil t))
+(defun qiang-make-font-string (font-name font-size)
+  (if (and (stringp font-size)
+           (equal ":" (string (elt font-size 0))))
+      (format "%s%s" font-name font-size)
+    (format "%s-%s" font-name font-size)))
+(defvar bhj-english-font-size nil)
+(defun qiang-set-font (english-fonts
+                       english-font-size
+                       chinese-fonts)
+  "english-font-size could be set to \":pixelsize=18\" or a integer.
+If set/leave chinese-font-size to nil, it will follow english-font-size"
+  (require 'cl)                         
+  (setq bhj-english-font-size english-font-size)
+  (let ((en-font (qiang-make-font-string
+                  (find-if #'qiang-font-existsp english-fonts)
+                  english-font-size))
+        (zh-font (font-spec :family (find-if #'qiang-font-existsp chinese-fonts))))
+    ;; Set the default English font
+    ;;
+    ;; The following 2 method cannot make the font settig work in new frames.
+    ;; (set-default-font "Consolas:pixelsize=18")
+    ;; (add-to-list 'default-frame-alist '(font . "Consolas:pixelsize=18"))
+    ;; We have to use set-face-attribute
+    (set-face-attribute
+     'default nil :font en-font)
+    (set-face-font 'italic (font-spec :family "Liberation Mono" :slant 'italic :weight 'normal :size (+ 0.0 english-font-size)))
+    (set-face-font 'bold-italic (font-spec :family "Liberation Mono" :slant 'italic :weight 'bold :size (+ 0.0 english-font-size)))
+    ;; Set Chinese font
+    ;; Do not use 'unicode charset, it will cause the english font setting invalid
+    (dolist (charset '(kana han symbol cjk-misc bopomofo))
+      (set-fontset-font t charset zh-font))))
+;(setq face-font-rescale-alist '(("Consolas" . 1.2) ("Microsoft Yahei" . 1.2) ("微软雅黑" . 1.2) ("WenQuanYi Zen Hei" . 1.2)))
+(defvar bhj-english-fonts '("Monaco" "Consolas" "DejaVu Sans Mono" "Monospace" "Courier New"))
+(defvar bhj-chinese-fonts '("YaHei Consolas Hybrid" "微软雅黑" "文泉驿等宽微米黑" "黑体" "新宋体" "宋体" "Microsoft Yahei"))
+;(global-set-key [(control x) (meta -)] (lambda () (interactive) (bhj-step-frame-font-size -1)))
+;(global-set-key [(control x) (meta +)] (lambda () (interactive) (bhj-step-frame-font-size 1)))
+(set-face-attribute 'default nil :font (font-spec))
+;;;使用C-k 包含回车符
+(setq-default kill-whole-line t)
+;;;以 y/n代表 yes/no
+(fset 'yes-or-no-p 'y-or-n-p)
+;;;删除至回收站
+(setq delete-by-moving-to-trash t)
+;;光标为竖线;方块为box
+(setq-default cursor-type 'bar)
+(setq-default blink-matching-delay 0.5)
+;;;光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线
+(mouse-avoidance-mode 'animate)
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil))
+;;;___________bookmark______________________
+(setq bookmark-default-file (concat os-etc-path "emacs.bmk"))
+;;;同步更新书签文件或者退出时保存
+(setq bookmark-save-flag 1)
+;;;___________view______________________
+;;;在标题栏显示buffer的名字
+;;;(setq frame-title-format "emacs@%b")
+(when (fboundp size-indication-mode)
+  (size-indication-mode t))              ;; show file size (emacs 22+)
+;;;设置标题栏显示文件的完整路径名
+(setq frame-title-format
+   '("%S" (buffer-file-name "%f"
+    (dired-directory dired-directory "%b"))))
+;;;直接打开和显示图片
+(auto-image-file-mode)
+(setq echo-keystrokes 0.9)
+;;关闭起动时的那个“开机画面”
+(setq inhibit-startup-message t)
+(global-font-lock-mode 1)  
+;; Also highlight parens  
+(setq show-paren-delay 0  
+     show-paren-style 'parenthesis)  
+;(setq default-fill-column 80);默认显示 80列
+;;;___________mode______________________
+(show-paren-mode 1)				
+;显示时间
+(display-time)
+(setq display-time-24hr-format t)
+;显示匹配的括号
+(show-paren-mode t)
+;;;打开就启用 text 模式
+(setq default-major-mode 'text-mode)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(fringe-mode -1)
+;;;___________ibuffer mode______________________
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(autoload 'ibuffer "ibuffer" "List buffers." t)
+;;;;;           nt              ;;;;;;;;;;;;
+;;;;max-frame
+;(defun w32-restore-fra	me ()
+;	   "Restore a minimized	frame"
+;   (interactive)		
+;	(w32-send-sys-command 61728))
+;(defun w32-maximize-frame ()
+;   "Maximize the current frame"
+;	 (interactive)
+;     (w32-send-sys-command 61488))
+;	 
+;(w32-maximize-frame)
+(run-with-idle-timer 1 nil 'w32-send-sys-command 61488)
+(defun toggle-full-screen () (interactive) (shell-command "emacs_fullscreen.exe"))
+;(global-set-key [f11] 'toggle-full-screen)
+;;;use-window-key
+;(setq w32-pass-lwindow-to-system nil) ;; prevent single keypress from activating Start Menu
+;(setq w32-lwindow-modifier 'nil)      ;; make sure it's not used as a modifier
+;(define-key key-translation-map (kbd "<lwindow>") 'event-apply-super-modifier)
+;(define-key key-translation-map (kbd "<apps>") 'event-apply-alt-modifier)
+
+;;;	mark
+;;; Mark current word
+(defun my-mark-current-word (&optional arg allow-extend)
+  "Put point at beginning of current word, set mark at end."
+  (interactive "p\np")
+  (setq arg (if arg arg 1))
+  (if (and allow-extend
+           (or (and (eq last-command this-command) (mark t))
+               (region-active-p)))
+      (set-mark
+       (save-excursion
+         (when (< (mark) (point))
+           (setq arg (- arg)))
+         (goto-char (mark))
+         (forward-word arg)
+         (point)))
+    (let ((wbounds (bounds-of-thing-at-point 'word)))
+      (unless (consp wbounds)
+        (error "No word at point"))
+      (if (>= arg 0)
+          (goto-char (car wbounds))
+        (goto-char (cdr wbounds)))
+      (push-mark (save-excursion
+                   (forward-word arg)
+                   (point)))
+      (activate-mark))))
+(defun copy-word (&optional arg)
+ "Copy words at point"
+ (interactive "P")
+ (let ((beg (progn (if (looking-back "[a-zA-Z0-9]" 1) (backward-word 1)) (point))) 
+	(end (progn (forward-word arg) (point))))
+ (copy-region-as-kill beg end))
+)
+(global-set-key "\C-cS" 'my-mark-current-word)
+(global-set-key "\C-cs" 'copy-word)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;auto-complete plugin
+(add-to-list 'load-path (concat os-git-path "pos-tip"))
+(add-to-list 'load-path (concat os-git-path "popup-el"))
+(add-to-list 'load-path (concat os-git-path "fuzzy-el"))
+(add-to-list 'load-path (concat os-git-path "auto-complete"))
+(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories (concat os-git-path "/auto-complete/dict"))
+(ac-config-default)
+(global-set-key [f2] 'auto-complete-mode)
+(setq ac-ignore-case t)
+(setq ac-fuzzy-enable t)
+;; Formatted
+;(ac-source-filename ac-source-functions ac-source-yasnippet
+; ac-source-variables ac-source-symbols ac-source-features
+; ac-source-abbrev ac-source-words-in-same-mode-buffers
+; ac-source-dictionary)
+
+;which one effect?
+;(setq auto-complete-mode t)
+;(global-auto-complete-mode t)
+;(define-key ac-mode-map (kbd "f2") 'auto-complete)
+;;;(ac-set-trigger-key "TAB")
+;;;(setq ac-auto-start nil)
+;;;(setq ac-auto-start 3)
+;;;(define-key ac-completing-map "\M-/" 'ac-stop)
+
+;;;ac face
+(set-face-background 'ac-candidate-face "green")
+(set-face-underline 'ac-candidate-face "darkgray")
+(set-face-background 'ac-selection-face "red")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-to-list 'load-path (concat os-git-path "yasnippet"))
+;(package-initialize) dont't work
+(require 'yasnippet) 
+;(add-to-list 'yas/root-directory (concat os-git-path "yasnippet-snippets"))
+;(yas/initialize)
+(yas-global-mode 1)
+
+;(add-to-list 'yas-snippet-dirs (concat os-git-path "yasnippet/snippets"))
+;(add-to-list 'yas-snippet-dirs (concat os-git-path "yasnippet/yasmate"))
+;(add-to-list 'yas-snippet-dirs (concat os-git-path "yasnippet-snippets"))
+(add-to-list 'yas-snippet-dirs hunter-snippet-path)
+;(add-to-list 'yas-snippet-dirs yas-installed-snippets-dir)
+(yas-reload-all)
+;(yas-load-directory 'yas-snippet-dirs)
+(global-set-key (kbd "C-;") 'yas/expand)
+;(yas/initialize)
+;(yas/load-directory (concat os-plugin-path "yasnippet-0.6.1c/snippets"))
+
+;;;;color-theme
+;;;(add-to-list 'load-path (concat os-plugin-path "theme"))
+;;;(require 'color-theme)
+;;;(color-theme-initialize)
+;;;;(color-theme-jb-simple)
+;;;;(color-theme-whateveryouwant)
+;;;(setq minibuffer-max-depth nil)
+;;;(setq my-color-themes (list 'color-theme-emacs-21
+;;;							'color-theme-billw 'color-theme-jsc-dark 
+;;;							'color-theme-resolve
+;;;							'color-theme-classic 'color-theme-jonadabian-slate
+;;;							'color-theme-kingsajz 'color-theme-shaman
+;;;							'color-theme-emacs-21
+;;;							'color-theme-sitaramv-nt 'color-theme-wheat
+;;;							'color-theme-whateveryouwant 'color-theme-matrix
+;;;							'color-theme-emacs-21))
+;;;(defun my-theme-set-default () ; Set the first row
+;;;  (interactive)
+;;;  (setq theme-current my-color-themes)
+;;;  (funcall (car theme-current)))
+;;;(defun my-describe-theme () ; Show the current theme
+;;;  (interactive)
+;;;  (message "%s" (car theme-current)))
+;;;; Set the next theme (fixed by Chris Webber - tanks)
+;;;(defun my-theme-cycle ()		
+;;;  (interactive)
+;;;  (setq theme-current (cdr theme-current))
+;;;  (if (null theme-current)
+;;;      (setq theme-current my-color-themes))
+;;;  (funcall (car theme-current))
+;;;  (message "%S" (car theme-current)))
+;;;(setq theme-current my-color-themes)
+;;;(setq color-theme-is-global nil) ; Initialization
+;;;;(my-theme-set-default)
+;;;(color-theme-emacs-21)
+;;;(global-set-key [f12] 'my-theme-cycle)
+
+;
+;;;(defmacro when-color-theme-is-global (prop)
+;;;  "Return prop if color-theme-is-global is true.
+;;;
+;;;Use this to wrap alist settings that should only be made
+;;;when color-theme-is-global is false, such as widget-mouse-face
+;;;and possibly others."
+;;;  (when color-theme-is-global prop))
+;;;(when-color-theme-is-global '(widget-mouse-face . highlight)) 
+
+;;;;;;;;;;;;;;;;;;;;;
+;(require 'wcy-swbuff)
+;; then you can use <C-tab> and <C-S-kp-tab> to switch buffer.
+;(global-set-key (kbd "<C-tab>") 'wcy-switch-buffer-forward)
+;(global-set-key (kbd "<C-S-kp-tab>") 'wcy-switch-buffer-backward)
+;
+;(setq wcy-switch-buffer-active-buffer-face  'highlight)
+;(setq wcy-switch-buffer-inactive-buffer-face  'secondary-selection )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;keisen-mode是一个用来绘制表格的好工具
+;(if window-system
+;  (autoload 'keisen-mode "keisen-mouse" "MULE table" t)
+;    (autoload 'keisen-mode "keisen-mule" "MULE table" t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'highlight-symbol)
+(global-set-key [f3] 'highlight-symbol-at-point)
+(global-set-key [(control f3)] 'highlight-symbol-next)
+(global-set-key [(shift f3)] 'highlight-symbol-prev)
+(global-set-key [(meta f3)] 'highlight-symbol-prev)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'tabbar)
+(tabbar-mode)
+(define-prefix-command 'lwindow-map)
+(global-set-key (kbd "<C-up>") 'tabbar-backward-group)
+(global-set-key (kbd "<C-down>") 'tabbar-forward-group)
+(global-set-key (kbd "<C-left>") 'tabbar-backward)
+(global-set-key (kbd "<C-right>") 'tabbar-forward)
+
+;;;; 设置tabbar外观  
+;;;; 设置默认主题: 字体, 背景和前景颜色，大小  
+(set-face-attribute 'tabbar-default-face nil  
+                   :family "DejaVu Sans Mono"  
+                   :background "gray80"  
+                   :foreground "gray30"  
+                   :height 1.0 
+                   )  
+; 设置左边按钮外观：外框框边大小和颜色  
+(set-face-attribute 'tabbar-button-face nil  
+                   :inherit 'tabbar-default  
+                   :box '(:line-width 1 :color "yellow70")  
+                   )  
+; 设置当前tab外观：颜色，字体，外框大小和颜色  
+(set-face-attribute 'tabbar-selected-face nil  
+                   :inherit 'tabbar-default  
+                   :foreground "black"  
+                   :background "green"  
+                   :box '(:line-width 2 :color "red")  
+                   :overline "black"  
+                   :underline "black"  
+                   :weight 'bold  
+                   )  
+; 设置非当前tab外观：外框大小和颜色  
+(set-face-attribute 'tabbar-unselected-face nil  
+                   :inherit 'tabbar-default
+				   :foreground "#002b36"  
+                   :background "#d33682"  
+                   :box '(:line-width 2 :color "#00B2BF")  
+                   )  
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;cedet
+;;;(load-file (concat os-plugin-path "cedet-1.1/common/cedet.el"))
+;;;
+;;;;Enable the Project management system
+;;;(global-ede-mode 1)
+;;;
+;;;;;;semantic
+;;;;; Enabling Semantic (code-parsing, smart completion) features
+;;;
+;;;;; * This enables the database and idle reparse engines
+;;;(semantic-load-enable-minimum-features)
+;;;
+;;;;; * This enables some tools useful for coding, such as summary mode,
+;;;;;   imenu support, and the semantic navigator
+;;;(semantic-load-enable-code-helpers)
+;;;
+;;;;; * This enables even more coding tools such as intellisense mode,
+;;;;;   decoration mode, and stickyfunc mode (plus regular code helpers)
+;;;(semantic-load-enable-gaudy-code-helpers)
+;;;
+;;;;(global-semantic-stickyfunc-mode -1)
+;;;;(setq semantic-stickyfunc-mode nil)
+;;;;; * This enables the use of Exuberant ctags if you have it installed.
+;;;;;   If you use C++ templates or boost, you should NOT enable it.
+;;;
+;;;;(setq semantic-ectag-program "C:/cygwin/bin/ctags.exe")
+;;;(setq semantic-ectag-program "C:/Windows/System32/ctags.exe")
+;;;
+;;;(semantic-load-enable-all-exuberent-ctags-support)
+;;;;;   Or, use one of these two types of support.
+;;;
+;;;;;   Add support for new languages only via ctags.
+;;;(semantic-load-enable-primary-exuberent-ctags-support)
+;;;
+;;;;;   Add support for using ctags as a backup parser.
+;;;(semantic-load-enable-secondary-exuberent-ctags-support)
+;;;
+;;;(semantic-load-enable-gaudy-code-helpers)
+;;;
+;;;(semantic-load-enable-semantic-debugging-helpers)
+;;;
+;;;
+;;;;;;srecode
+;;;; Enable template insertion menu
+;;;(global-srecode-minor-mode 1)            
+;;;
+;;;(semantic-load-enable-excessive-code-helpers)
+;;;(require 'semantic-ia)
+;;;(require 'semantic-gcc)
+;;;(semantic-add-system-include "C:/cygwin/usr/include" 'c-mode)
+;;;
+;;;(setq-mode-local c-mode semanticdb-find-default-throttle
+;;;				 '(project unloaded system recursive))
+;;;
+;;;(defun my-semantic-hook ()
+;;;  (imenu-add-to-menubar "TAGS"))
+;;;(add-hook 'semantic-init-hooks 'my-semantic-hook)
+;;;
+;;;(require 'semanticdb)
+;;;(global-semanticdb-minor-mode 1)
+;;;
+;;;;; if you want to enable support for gnu global
+;;;(when (cedet-gnu-global-version-check t)
+;;;  (require 'semanticdb-global)
+;;;  (semanticdb-enable-gnu-global-databases 'c-mode)
+;;;  (semanticdb-enable-gnu-global-databases 'c++-mode))
+;;;
+;;;;; enable ctags for some languages:
+;;;;;  Unix Shell, Perl, Pascal, Tcl, Fortran, Asm
+;;;(when (cedet-ectag-version-check)
+;;;  (semantic-load-enable-primary-exuberent-ctags-support))
+;;;
+;;;;;;(ede-cpp-root-project "Test"
+;;;;;;                :name "Test Project"
+;;;;;;                :file "~/work/project/CMakeLists.txt"
+;;;;;;                :include-path '("/"
+;;;;;;                                "/Common"
+;;;;;;                                "/Interfaces"
+;;;;;;                                "/Libs"
+;;;;;;                               )
+;;;;;;                :system-include-path '("~/exp/include")
+;;;;;;                :spp-table '(("isUnix" . "")
+;;;;;;                             ("BOOST_TEST_DYN_LINK" . "")))
+;;;
+;;;(defun my-cedet-hook ()
+;;;  (local-set-key [(control return)] 'semantic-ia-complete-symbol)
+;;;  (local-set-key "\C-c?" 'semantic-ia-complete-symbol-menu)
+;;;  (local-set-key "\C-c>" 'semantic-complete-analyze-inline)
+;;;  (local-set-key "\C-cp" 'semantic-analyze-proto-impl-toggle))
+;;;(add-hook 'c-mode-common-hook 'my-cedet-hook)
+;;;
+;;;;(defun my-c-mode-cedet-hook ()
+;;;; (local-set-key "." 'semantic-complete-self-insert)
+;;;; (local-set-key ">" 'semantic-complete-self-insert))
+;;;;(add-hook 'c-mode-common-hook 'my-c-mode-cedet-hook)
+;;;
+;;;;;;;;;;;;;;
+;;;(global-semantic-stickyfunc-mode)
+;;;;;;;;;;;;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;nXML mode
+;(load (concat os-plugin-path "nxml-mode-20041004/rng-auto.el"))
+
+;;;;;;;;;;;midnight-mode
+;(setq midnight-mode t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;cursor
+;(require 'cursor-chg)  ; Load the library
+;(toggle-cursor-type-when-idle 1) ; Turn on cursor change when Emacs is idle
+;(change-cursor-mode 1) ; Turn on change for overwrite, read-only, and input mode    
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;cursor   
+;(global-set-key "\C-c@ \C-c)" 'crosshairs-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;linum+
+(require 'linum+)
+;;;(fringe-mode)
+;(require 'frame-cmds)
+
+;;;;;;;;;;;nxhtml
+;(load (concat os-plugin-path "nxhtml/autostart.el"))
+;(setq auto-mode-alist 
+;      (cons '("\\.jsp" . nxhtml-mode)  
+;            auto-mode-alist))
+			
+;;;;;;;;;;;mode line enchance
+;(require 'modeline-posn)
+;(column-number-mode 1)
+;(size-indication-mode 1)
+
+;;;;;;;;;;;kill ring
+(require 'browse-kill-ring)
+(global-set-key [f9] 'browse-kill-ring)
+
+;;;;;;;;;;;icicles
+(add-to-list 'load-path  (concat os-git-path "icicles"))
+(require 'icicles)
+(icy-mode 1)
+
+;;;;;;;;;;;cygwin
+;;;(setenv "PATH" (concat "c:/cygwin/bin;" (getenv "PATH")))
+;;;(setq exec-path (cons "c:/cygwin/bin/" exec-path))
+;;;(require 'cygwin-mount)
+;;;(cygwin-mount-activate)
+
+;;;(add-hook 'comint-output-filter-functions
+;;;    'shell-strip-ctrl-m nil t)
+;;;(add-hook 'comint-output-filter-functions
+;;;    'comint-watch-for-password-prompt nil t)
+;;;(setq explicit-shell-file-name "bash.exe")
+;;;;; For subprocesses invoked via the shell
+;;;;; (e.g., "shell -c command")
+;;;(setq shell-file-name explicit-shell-file-name)
+
+;;;;;;;;;;;menubar+
+;(eval-after-load "menu-bar" '(require 'menu-bar+))
+
+;;;;;;;;;;;scheme
+(setq scheme-program-name "scm")
+;(setq scheme-program-name "guile")
+;(setq scheme-program-name "mit-scheme")
+;;;;;;;;;;;;;;quack.el
+;(require 'quack)
+
+;;;;;;;;;;;;;;cmuscheme.el
+;(autoload 'run-scheme "cmuscheme" "Run an inferior Scheme process." t)
+
+(setq auto-mode-alist 
+      (cons '("\\.scm$" . scheme-mode)  
+            auto-mode-alist))
+
+; Define C-c C-t to run my favorite command in inferior scheme mode:
+(setq cmuscheme-load-hook
+      '((lambda () (define-key inferior-scheme-mode-map "\C-c\C-t"
+                               'favorite-cmd))))
+
+;;;;;;;;xscheme.el
+;(require 'xscheme)
+
+;;;;;;;;;;;;;;bee-mode
+;;;(autoload 'bdb "bdb" "bdb mode" t)
+;;;(autoload 'bee-mode "bee-mode" "bee mode" t)
+;;;(setq auto-mode-alist
+;;;      (append '(("\\.scm$" . bee-mode)
+;;;                ("\\.sch$" . bee-mode)
+;;;                ("\\.scme$" . bee-mode)
+;;;                ("\\.bgl$" . bee-mode)
+;;;                ("\\.bee$" . bee-mode))
+;;;              auto-mode-alist))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;org-mode
+(add-to-list 'load-path (concat os-git-path "d:/program/emacs-24.3/lisp/org/lisp/"))
+
+;(add-to-list 'load-path (concat os-git-path "org-mode/contrib/lisp/"))
+;(require 'org-install)
+(setq org-hide-leading-stars t)
+(setq org-todo-keywords
+	  '((type "work(w!)" "diary(d!)" "mind(m!)" "pro(p!)")
+		(sequence "DOING(i!)" "DONE(e!)" "|" "PRE(p!)" "CODING(c@!)" "DEBUG(d@!)" "RELEASE(r!)" "MAINTAIN(m@!)" "PAUSE(a@!)"
+				  "|"  "X1(1@!)" "X2(2@!)" "X3(3@!)" "X4(4@!)" "X8(8@!)" "X10(0@!)")))
+(setq org-todo-keyword-faces
+	  '(("work" .      (:background "red" :foreground "white" :weight bold))
+		("life" .      (:background "white" :foreground "red" :weight bold))
+		("mind" .      (:foreground "MediumBlue" :weight bold)) 
+		("DOING" .   (:background "LightGreen" :foreground "gray" :weight bold))
+		("DONE" .      (:background "DarkOrange" :foreground "black" :weight bold))
+		("DONE" .      (:background "azure" :foreground "Darkgreen" :weight bold))
+		("PRE" .      (:background "azure" :foreground "Darkgreen" :weight bold))
+		("CODING" .      (:background "azure" :foreground "Darkgreen" :weight bold))
+		("DEBUG" .      (:background "azure" :foreground "Darkgreen" :weight bold))
+		("RELEASE" .      (:background "azure" :foreground "Darkgreen" :weight bold)) 
+		("MAINTAIN" .     (:background "gray" :foreground "black"))
+	    ("PAUSE" .     (:background "gray" :foreground "black"))
+		))
+(setq org-tag-alist '(
+					  (:startgroup . nil)
+					  ("@work" . ?w) ("@pro" . ?p)
+					  ("@mind" . ?m) ("@diary" . ?d)
+					  (:endgroup . nil)
+					  (:startgroup . nil)
+					  ("@discard" . ?e)
+					  ("@undetermined" . ?u)
+					  ("@confirmed" . ?f)
+					  (:endgroup . nil)
+))
+;;;save clock
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+
+(setq org-support-shift-select t)
+(setq org-log-done 'time)
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+;;; active Babel languages
+;(org-babel-do-load-languages
+; 'org-babel-load-languages
+; '((sql . t)))
+;;; add additional languages with '((language . t)))
+(global-set-key "\C-c'" 'org-edit-src-code)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+
+;;;xcscope.el
+;(require 'xcscope)
+
+;;;desktop mode
+(desktop-save-mode 1)
+(load "desktop")
+(desktop-load-default)
+(desktop-read)
+;;;for Q:emacs desktop file appear to be in use by PID xxxxx.
+(setq-default desktop-load-locked-desktop t)
+
+;;;session
+(require 'session)
+(add-hook 'after-init-hook 'session-initialize)
+(setq session-use-package 1)
+
+;;;dired
+;文件管理器
+(global-set-key [f5] 'dired-jump)
+(add-hook 'dired-mode-hook (lambda ()
+  (interactive)
+  (make-local-variable  'dired-sort-map)
+  (setq dired-sort-map (make-sparse-keymap))
+  (define-key dired-mode-map "s" dired-sort-map)
+  (define-key dired-sort-map "s"
+              '(lambda () "sort by Size"
+                (interactive) (dired-sort-other (concat dired-listing-switches "S"))))
+  (define-key dired-sort-map "x"
+              '(lambda () "sort by eXtension"
+                 (interactive) (dired-sort-other (concat dired-listing-switches "X"))))
+  (define-key dired-sort-map "t"
+              '(lambda () "sort by Time"
+                 (interactive) (dired-sort-other (concat dired-listing-switches "t"))))
+  (define-key dired-sort-map "n"
+              '(lambda () "sort by Name"
+                 (interactive) (dired-sort-other (concat dired-listing-switches ""))))))
+
+;;;;;;;;;;;psd-mode
+;;(defalias 'full-copy-sparse-keymap 'copy-keymap)
+;(defun full-copy-sparse-keymap (km)
+;  "Recursively copy the sparse keymap KM"
+;  (cond ((consp km)
+;	 (cons (full-copy-sparse-keymap (car km))
+;	       (full-copy-sparse-keymap (cdr km))))
+;	(t km)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;           program         ;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;___________ c mode______________________
+(setq c-default-style '((c-mode . "k&r") (other . "gnu")))
+(setq c-basic-offset 4)
+
+(setq-default c-electric-flag t)
+;;tab设置4个字符
+(setq-default tab-width 4)
+
+(defun c-lineup-arglist-tabs-only (ignored)
+  "Line up argument lists by tabs, not spaces"
+  (let* ((anchor (c-langelem-pos c-syntactic-element))
+	 (column (c-langelem-2nd-pos c-syntactic-element))
+	 (offset (- (1+ column) anchor))
+	 (steps (floor offset c-basic-offset)))
+    (* (max steps 1)
+       c-basic-offset)))
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            ;; Add kernel style
+            (c-add-style
+             "linux-tabs-only"
+             '("linux" (c-offsets-alist
+                        (arglist-cont-nonempty
+                         c-lineup-gcc-asm-reg
+                         c-lineup-arglist-tabs-only))))))
+
+;;;(add-hook 'c-mode-hook
+;;;          (lambda ()
+;;;            (let ((filename (buffer-file-name)))
+;;;              ;; Enable kernel mode for the appropriate files
+;;;              (when (and filename
+;;;                         (string-match (expand-file-name "~/src/linux-trees")
+;;;                                       filename))
+;;;                (setq indent-tabs-mode t)
+;;;                (c-set-style "linux-tabs-only")))))
+
+;;;(require 'ctypes)
+;;;(setq ctypes-write-types-at-exit t)
+;;;(ctypes-read-file nil nil t t)
+;;;(ctypes-auto-parse-mode 1)
+
+;;;___________scheme______________________
+;(setq scheme-program-name "scm")
+;;(setq scheme-program-name "mit-scheme")
+;(setq scheme-program-name "guile")
+
+;;;(defun xscheme ()
+;;;  "Loads xscheme and runs a scheme process in the current buffer."
+;;;  (interactive)
+;;;  (load-library "xscheme")
+;;;  (xscheme-start "scheme -emacs"
+;;;                 (buffer-name)
+;;;                 (buffer-name)))
+;;;
+(global-set-key [f6] 'eval-region)
+(global-set-key [(shift f6)] 'eval-buffer)
+
+;;;(mapcar
+;;; (function (lambda (setting)
+;;;             (setq auto-mode-alist
+;;;                   (cons setting auto-mode-alist))))
+;;; '(("\\.jsp$".  nxml-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;           util            ;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;--------------------------------------------------
+;;;	windows & frame
+;;;--------------------------------------------------
+
+;;;windows move:emacs internal
+;;The ‘fbound’ test is for those XEmacs installations that don’t have the windmove package available.
+;(when (fboundp 'windmove-default-keybindings)
+;  (windmove-default-keybindings))
+
+;;key binding
+;;(windmove-default-keybindings 'meta)
+;
+;(defun win-resize-top-or-bot ()
+;  "Figure out if the current window is on top, bottom or in the
+;middle"
+;  (let* ((win-edges (window-edges))
+;	 (this-window-y-min (nth 1 win-edges))
+;	 (this-window-y-max (nth 3 win-edges))
+;	 (fr-height (frame-height)))
+;    (cond
+;     ((eq 0 this-window-y-min) "top")
+;     ((eq (- fr-height 1) this-window-y-max) "bot")
+;     (t "mid"))))
+;
+;(defun win-resize-left-or-right ()
+;  "Figure out if the current window is to the left, right or in the
+;middle"
+;  (let* ((win-edges (window-edges))
+;	 (this-window-x-min (nth 0 win-edges))
+;	 (this-window-x-max (nth 2 win-edges))
+;	 (fr-width (frame-width)))
+;    (cond
+;     ((eq 0 this-window-x-min) "left")
+;     ((eq (+ fr-width 4) this-window-x-max) "right")
+;     (t "mid"))))
+;
+;(defun win-resize-enlarge-horiz ()
+;  (interactive)
+;  (cond
+;   ((equal "top" (win-resize-top-or-bot)) (enlarge-window -1))
+;   ((equal "bot" (win-resize-top-or-bot)) (enlarge-window 1))
+;   ((equal "mid" (win-resize-top-or-bot)) (enlarge-window -1))
+;   (t (message "nil"))))
+;
+;(defun win-resize-minimize-horiz ()
+;  (interactive)
+;  (cond
+;   ((equal "top" (win-resize-top-or-bot)) (enlarge-window 1))
+;   ((equal "bot" (win-resize-top-or-bot)) (enlarge-window -1))
+;   ((equal "mid" (win-resize-top-or-bot)) (enlarge-window 1))
+;   (t (message "nil"))))
+;
+;(defun win-resize-enlarge-vert ()
+;  (interactive)
+;  (cond
+;   ((equal "left" (win-resize-left-or-right)) (enlarge-window-horizontally -1))
+;   ((equal "right" (win-resize-left-or-right)) (enlarge-window-horizontally 1))
+;   ((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally -1))))
+;
+;(defun win-resize-minimize-vert ()
+;  (interactive)
+;  (cond
+;   ((equal "left" (win-resize-left-or-right)) (enlarge-window-horizontally 1))
+;   ((equal "right" (win-resize-left-or-right)) (enlarge-window-horizontally -1))
+;   ((equal "mid" (win-resize-left-or-right)) (enlarge-window-horizontally 1))))
+;
+
+;;;by hunter
+
+;(global-set-key [C-M-down] 'shrink-window)
+;(global-set-key [C-M-up] 'enlarge-window)
+;(global-set-key [C-M-left] 'shrink-window-horizontally)
+;(global-set-key [C-M-right] 'enlarge-window-horizontally)
+
+;;(global-set-key [C-M-up] 'win-resize-enlarge-horiz)
+;;(global-set-key [C-M-down] 'win-resize-minimize-horiz)
+;;(global-set-key [C-M-left] 'win-resize-enlarge-vert)
+;;(global-set-key [C-M-right] 'win-resize-minimize-vert)
+
+;;;always in three windows
+;(load-file (concat os-plugin-path "three-windows.el"))
+
+;;;work-win-nine.el
+;;;save 9 workplace always
+;(load-file (concat os-plugin-path "work-win-nine.el"))
+
+;;;--------------------------------------------------
+;;;	mark
+;;;--------------------------------------------------
+
+;;; Mark current word
+;(defun my-mark-current-word (&optional arg allow-extend)
+;  "Put point at beginning of current word, set mark at end."
+;  (interactive "p\np")
+;  (setq arg (if arg arg 1))
+;  (if (and allow-extend
+;           (or (and (eq last-command this-command) (mark t))
+;               (region-active-p)))
+;      (set-mark
+;       (save-excursion
+;         (when (< (mark) (point))
+;           (setq arg (- arg)))
+;         (goto-char (mark))
+;         (forward-word arg)
+;         (point)))
+;    (let ((wbounds (bounds-of-thing-at-point 'word)))
+;      (unless (consp wbounds)
+;        (error "No word at point"))
+;      (if (>= arg 0)
+;          (goto-char (car wbounds))
+;        (goto-char (cdr wbounds)))
+;      (push-mark (save-excursion
+;                   (forward-word arg)
+;                   (point)))
+;      (activate-mark))))
+;(global-set-key "\C-cw" 'my-mark-current-word)
+
+;;;; MakingMarkVisible
+;;; Author: Patrick Gundlach 
+;;; nice mark - shows mark as a highlighted 'cursor' so user 'always' 
+;;; sees where the mark is. Especially nice for killing a region.
+
+(defvar pg-mark-overlay nil
+  "Overlay to show the position where the mark is") 
+(make-variable-buffer-local 'pg-mark-overlay)
+(put 'pg-mark-mark 'face 'secondary-selection)
+(defvar pg-mark-old-position nil
+  "The position the mark was at. To be able to compare with the
+current position")
+(defun pg-show-mark () 
+  "Display an overlay where the mark is at. Should be hooked into 
+activate-mark-hook" 
+  (unless pg-mark-overlay 
+    (setq pg-mark-overlay (make-overlay 0 0))
+    (overlay-put pg-mark-overlay 'category 'pg-mark-mark))
+  (let ((here (mark t)))
+    (when here
+      (move-overlay pg-mark-overlay here (1+ here)))))
+(defadvice  exchange-point-and-mark (after pg-mark-exchange-point-and-mark)
+  "Show visual marker"
+  (pg-show-mark))
+(ad-activate 'exchange-point-and-mark)
+(add-hook 'activate-mark-hook 'pg-show-mark)
+
+;;;transpose-frame.el
+;(require 'transpose-frame)
+;(global-set-key "\C-c1" 'transpose-frame)
+;;;	insert date
+;insert-current-date
+(defun insert-current-date ()
+    "Insert the current date"
+    (interactive "*")
+    ;(insert (format-time-string "%Y-%m-%d %H:%M:%S" (current-time))))
+    (insert (concat (format-time-string "%Y-%m-%d" (current-time))
+					" "
+					(format-time-string "%H:%M:%S" (current-time)))))
+(global-set-key "\C-cW" 'insert-current-date)
+;insert-current-time
+(defun insert-current-time ()
+    "Insert the current time"
+    ;(insert (format-time-string "%Y/%m/%d %H:%M:%S" (current-time)))
+    (insert (format-time-string "%H:%M:%S" (current-time))))
+(global-set-key "\C-cw" 'insert-current-time)
+;;;	weibo
+;(add-to-list 'load-path (concat os-plugin-path "weibo.emacs-master/weibo.emacs-master/")
+;(require 'weibo)
+;(setq url-using-proxy nil)
+;(setq url-using-proxy t)
+;(setq url-proxy-services '(("http"  . "http://127.0.0.1:8087")
+;                            "https" . "http://127.0.0.1:8087"))
+;;;c# mode
+(autoload 'csharp-mode "csharp-mode" "Major mode for editing C# code." t)
+(setq auto-mode-alist
+	  (append '(("\\.cs$" . csharp-mode)) auto-mode-alist))
+;;;web mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode)) 
+(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode)) 
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode)) 
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode)) 
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+;;;scroll 
+(defmacro global-set-key* (keys &rest body)
+  `(global-set-key ,keys (lambda () (interactive) ,@body)))
+(global-set-key* [(shift control n)] (next-line) (scroll-up 1))
+(global-set-key* [(shift control p)] (previous-line) (scroll-down 1))
+
+(global-set-key (kbd "C-c o") 'multi-occur-in-matching-buffers)
+(global-set-key (kbd "C-c u") 're-builder)
+(require 'anything)
+(require 'anything-config)
+;(global-set-key (kbd "M-?") 'anything)
+(global-set-key (kbd "<f4>") 'anything)
+;(defun my-anything ()
+;  (anything-other-buffer
+;   '(anything-c-source-buffers
+;     anything-c-source-file-name-history
+;     anything-c-source-info-pages
+;     anything-c-source-info-elisp
+;     anything-c-source-man-pages
+;     anything-c-source-locate
+;     anything-c-source-emacs-commands
+;	 anything-c-kill-ring
+;	 anything-c-mark-ring)
+;   " *my-anything*"))
+;(global-set-key (kbd "C-c x") 'my-anything)
+
+;;;email mew
+;(if (string-equal system-type "windows-nt")
+;    ;; Note,in windows,you must use replace stunnel4 with stunnel3 version.
+;    (setq mew-prog-ssl  "D:/program/stunnel/stunnel.exe")
+;  (setq mew-prog-ssl "/usr/bin/stunnel"))
+;(autoload 'mew "mew" nil t)
+;(autoload 'mew-send "mew" nil t)
+; 
+;;; Optional setup (Read Mail menu for Emacs 21):
+;(if (boundp 'read-mail-command)
+;    (setq read-mail-command 'mew))
+;;; Optional setup (e.g. C-xm for sending a message):
+;(autoload 'mew-user-agent-compose "mew" nil t)
+;(if (boundp 'mail-user-agent)
+;    (setq mail-user-agent 'mew-user-agent))
+;(if (fboundp 'define-mail-user-agent)
+;    (define-mail-user-agent
+;      'mew-user-agent
+;      'mew-user-agent-compose
+;      'mew-draft-send-message
+;      'mew-draft-kill
+;      'mew-send-hook))
+;(setq mew-name "design0er")
+;(setq mew-pop-user "design0er@gmail")
+;(setq mew-pop-server "pop.gmail.com")
+;(setq mew-smtp-user "smtpuser@gmail.com")
+;(setq mew-smtp-server "smtp.gmail.com")
+
+;(defun uniq-lines (beg end)
+;  "Unique lines in region.
+;Called from a program, there are two arguments:
+;BEG and END (region to sort)."
+;  (interactive "r")
+;  (save-excursion
+;    (save-restriction
+;      (narrow-to-region beg end)
+;      (goto-char (point-min))
+;      (while (not (eobp))
+;        (kill-line 1)
+;        (yank)
+;        (let ((next-line (point)))
+;          (while
+;              (re-search-forward
+;               (format "^%s" (regexp-quote (car kill-ring))) nil t)
+;            (replace-match "" nil nil))
+;          (goto-char next-line))))))
+
+;;;Track Emacs commands frequency
+;;;keyfreq-show
+(require 'keyfreq)
+(keyfreq-mode 1)
+(keyfreq-autosave-mode 1)
+
+;; copy region or whole line
+(global-set-key "\M-w"
+		(lambda ()
+		  (interactive)
+		  (if mark-active
+		      (kill-ring-save (region-beginning)
+				      (region-end))
+		    (progn
+		      (kill-ring-save (line-beginning-position)
+				      (line-end-position))
+		      (message "copied line")))))
+;; kill region or whole line
+(global-set-key "\C-w"
+				(lambda ()
+				  (interactive)
+				  (if mark-active
+					  (kill-region (region-beginning)
+								   (region-end))
+					(progn
+					  (kill-region (line-beginning-position)
+								   (line-end-position))
+					  (message "killed line")))))
+
+(global-set-key (kbd "C-`") 'set-mark-command)
+		
+;(global-set-key (kbd "<f11>") 'follow-delete-other-windows-and-split)
+(global-set-key (kbd "<f11>") 'toggle-frame-fullscreen)
+
+;(global-set-key (kbd "") 'follow-delete-other-windows-and-split)
+(global-set-key [(ctrl f4)] 'kill-buffer)
+;(global-set-key (kbd "<f11>") 'follow-mode)
+
+;;;evil
+(add-to-list 'load-path (concat os-plugin-path "/evil/"))
+(require 'evil)  
+;(evil-mode 1)
+;(add-to-list 'auto-mode-alist '("\\.txt\\'" . evil-mode))
+(global-set-key (kbd "C-z") 'evil-mode)
+; change mode-line color by evil state
+;; (lexical-let ((default-color (cons (face-background 'mode-line)
+;; 								   (face-foreground 'mode-line))))
+;;   (add-hook 'post-command-hook
+;; 			(lambda ()
+;; 			  (let ((color (cond ((minibufferp) default-color)
+;; 								 ((evil-motion-state-p) '("#ffffff" . "#71142c"))
+;; 								 ((evil-normal-state-p) '("#ffffff" . "#226912"))
+;; 								 ((evil-visual-state-p) '("#ffffff" . "#b81f00"))
+;; 								 ((evil-replace-state-p) '("#ffffff" . "#de770d"))
+;; 								 ((evil-operator-state-p) '("#ffffff" . "#a511e8"))
+;; 								 ((evil-insert-state-p) '("#ffffff" . "#287636"))
+;; 								 ((evil-emacs-state-p)  '("#00bf00" . "#000000"))
+;; 								 ((buffer-modified-p)   '("#ffffff" . "#123456"))
+;; 								 (t default-color))))
+;; 				(set-face-background 'mode-line (car color))
+				;; (set-face-foreground 'mode-line (cdr color))))))
+;;key mapping
+;; (define-key evil-motion-state-map "cu" 'universal-argument)
+
+;;;Evil Leader
+(add-to-list 'load-path (concat os-git-path "/evil-leader/"))
+(require 'evil-leader)
+(global-evil-leader-mode)
+(evil-leader/set-key
+  "e" 'find-file
+  "b" 'switch-to-buffer
+  "k" 'kill-buffer)
+;;;evil-nerd-commenter
+(add-to-list 'load-path (concat os-git-path "/evil-nerd-commenter/"))
+(require 'evil-nerd-commenter)
+(setq evilnc-hotkey-comment-operator ",,")
+(evilnc-default-hotkeys)
+(defun evilnc-default-hotkeys ()
+  "Set the hotkeys of evil-nerd-comment"
+  (interactive)
+  (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
+  (global-set-key (kbd "C-c l") 'evilnc-comment-or-uncomment-to-the-line)
+  (global-set-key (kbd "C-c c") 'evilnc-copy-and-comment-lines)
+  (global-set-key (kbd "C-c p") 'evilnc-comment-or-uncomment-paragraphs)
+  (eval-after-load 'evil
+       (define-key evil-normal-state-map ",ci" 'evilnc-comment-or-uncomment-lines)
+       (define-key evil-normal-state-map ",cl" 'evilnc-comment-or-uncomment-to-the-line)
+       (define-key evil-normal-state-map ",cc" 'evilnc-copy-and-comment-lines)
+       (define-key evil-normal-state-map ",cp" 'evilnc-comment-or-uncomment-paragraphs)
+       (define-key evil-normal-state-map ",cr" 'comment-or-uncomment-region)
+       ))
+;; ace jump mode major function
+;;
+;;;Usage:
+;;;
+;;;"C-c SPC" ==> ace-jump-word-mode
+;;;
+;;;    enter first character of a word, select the highlighted key to move to it.
+;;;
+;;;"C-u C-c SPC" ==> ace-jump-char-mode
+;;;
+;;;    enter a character for query, select the highlighted key to move to it.
+;;;
+;;;"C-u C-u C-c SPC" ==> ace-jump-line-mode
+;;;
+;;;    each non-empty line will be marked, select the highlighted key to move to it.
+;;;
+(add-to-list 'load-path (concat os-git-path "ace-jump-mode"))
+(autoload
+  'ace-jump-mode
+  "ace-jump-mode"
+  "Emacs quick move minor mode"
+  t)
+;; you can select the key you prefer to
+(define-key global-map (kbd "M-`") 'ace-jump-mode)
+(define-key global-map (kbd "<f1>") 'ace-jump-line-mode)
+;(define-key global-map (kbd "M-`") 'ace-jump-char-mode)
+;; enable a more powerful jump back function from ace jump mode
+(autoload
+  'ace-jump-mode-pop-mark
+  "ace-jump-mode"
+  "Ace jump back:-)"
+  t)
+(eval-after-load "ace-jump-mode"
+  '(ace-jump-mode-enable-mark-sync))
+(define-key global-map (kbd "M-SPC") 'ace-jump-mode-pop-mark)
+;; 
+;;If you use viper mode :
+;(define-key viper-vi-global-user-map (kbd "SPC") 'ace-jump-mode)
+;;If you use evil
+(define-key evil-normal-state-map (kbd "SPC") 'ace-jump-mode)
+
+(require 'undo-tree)
+(global-undo-tree-mode)
+
+;; setup load-path and autoloads
+(setq inferior-lisp-program sbcl-exe-path)
+(add-to-list 'load-path (concat os-new-git-path "slime"))
+(require 'slime)
+(slime-setup)
+
+(add-to-list 'load-path (concat os-git-path "window-numbering.el"))
+(require 'window-numbering)
+(window-numbering-mode 1)
+;(setq window-numbering-assign-func (lambda () (when (equal (buffer-name) "basic") 9)))
+;(setq window-numbering-assign-func (lambda () (when (equal (buffer-name) "hunter.org") 8)))
+;(setq window-numbering-assign-func (lambda () (when (equal (buffer-name) "**") 9)))
+;(setq window-numbering-assign-func (lambda () (when (equal (buffer-name) "*basic*") 9)))
+;(setq window-numbering-assign-func (lambda () (when (equal (buffer-name) "*basic*") 9)))
+
+;(autoload 'js2-mode "js2" nil t)
+;;(add-to-list 'auto-mode-alist '("\\.js" . js2-mode))
+;(add-hook 'js-mode-hook 'js2-minor-mode)
+;(add-hook 'js2-mode-hook 'ac-js2-mode)
+;(setq js2-highlight-level 3)
+(when (fboundp 'winner-mode)
+(winner-mode 1))
+
+
+(add-to-list 'load-path (concat os-git-path "emacs-window-manager"))
+(require 'e2wm)
+(global-set-key (kbd "M-+") 'e2wm:start-management)
+(global-set-key (kbd "M--") 'e2wm:start-management)
+;5 kinds of perspectives you can choose for splitting the window:
+; Code, Two, Doc, Dashboard, and Array perspective
+
+(require 'linum-relative)
+(linum-on)
+;Toggle between linum-relative and linum.
+(linum-relative-toggle)
+(line-number-mode t)                     ;; show line numbers
+(column-number-mode t)                   ;; show column numbers
+
+(global-set-key [(control f1)] 'linum-mode)
+(global-set-key [(meta f1)] 'linum-relative-toggle)
+
+;;;relative-linum
+;; (global-linum-mode t)
+
+
+(add-to-list 'load-path (concat os-git-path "markdown-mode"))
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.text\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.mdown\\'" . markdown-mode))
+
+(add-to-list 'load-path (concat os-git-path "powerline"))
+(require 'powerline)
+;; (powerline-default-theme)
+;; (powerline-center-theme)
+;; (powerline-vim-theme)
+(powerline-center-evil-theme)
+;; (powerline-revert)
+
+(require 're-builder)
+(setq reb-re-syntax 'string)
+
+;;;ahk
+(setq ahk-syntax-directory "c:/pro/AutoHotKey 懒人包/AutoHotKey 中文版/Extras/Editors/Syntax/")
+(add-to-list 'auto-mode-alist '("\\.ahk$" . ahk-mode))
+(autoload 'ahk-mode "ahk-mode")
+
+(ffap-bindings)
+
+(require 'everything)
+;(setq everything-ffap-integration nil)                ;; to disable ffap integration
+(setq everything-cmd everything-es-exe-path)        ;; to let everything.el know where to find es.exe
+(global-set-key (kbd "<f8>") 'everything)
+
+;;;pl-sql mode
+(setq auto-mode-alist
+	  (append
+	   '(("\\.\\(p\\(?:k[bg]\\|ls\\)\\|sql\\)\\'" . plsql-mode))
+	   auto-mode-alist))
+;; Narrowing && Widening
+(put 'narrow-to-defun  'disabled nil)
+(put 'narrow-to-page   'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+
+;; LustyExplorer
+(require 'lusty-explorer)
+;; M-x lusty-file-explorer
+;; M-x lusty-buffer-explorer
+;; (global-set-key "\C-cf" 'lusty-file-explorer)
+(when (require 'lusty-explorer nil 'noerror)
+  ;; overrride the normal file-opening, buffer switching
+  (global-set-key (kbd "C-x C-f") 'lusty-file-explorer)
+  (global-set-key (kbd "C-x b")   'lusty-buffer-explorer))
+
+;; Sunrise Commander
+
+(add-to-list 'load-path (concat os-git-path "sunrise-commander"))
+(require 'sunrise-commander)
+(add-to-list 'auto-mode-alist '("\\.srvm\\'" . sr-virtual-mode))
+(global-set-key (kbd "<f5>") 'sunrise)

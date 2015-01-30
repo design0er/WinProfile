@@ -1,0 +1,5 @@
+set hlsearch                " 搜索时高亮显示被找到的文本
+set ignorecase smartcase    " 搜索时忽略大小写，但在有一个或以上大写字母时仍大小写敏感
+set incsearch               " 输入搜索内容时就显示搜索结果
+set showmatch               " 插入括号时，短暂地跳转到匹配的对应括号
+set magic      	            " 显示括号配对情况
