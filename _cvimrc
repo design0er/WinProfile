@@ -3,8 +3,9 @@ let scrollduration=0
 
 "set nohud
 set nosmoothscroll
-set noautofocus " The opposite of autofocus; this setting stops
-                " sites from focusing on an input box when they load
+set noautofocus 
+" The opposite of autofocus; this setting stops
+" sites from focusing on an input box when they load
 set typelinkhints
 set cncpcompletion
 
@@ -15,7 +16,7 @@ let barposition = "bottom"
 
 let locale = "cn" 
 " Current choices are 'jp' and 'uk'. This allows cVim to use sites like google.co.uk
- " or google.co.jp to search rather than google.com. Support is currently limited.
+" or google.co.jp to search rather than google.com. Support is currently limited.
 " Let me know if you need a different locale for one of the completion/search engines
 let hintcharacters = "qweasdzxcfjlkopnm"
 
@@ -36,15 +37,12 @@ let searchalias b = "baidu"
 "todo
 let qmark a = [ "http://www.google.com", "http://www.baidu.com"]
 
-let blacklists = ["https://mail.google.com/*",
-	"*://mail.google.com/*"
-	]
+let blacklists = ["https://mail.google.com/*", "*://mail.google.com/*" ]
 let mapleader = ","
 let previousmatchpattern="(back|上一*|前一*|less|<)+"
 let nextmatchpattern="(next|more|>|下一*|后一*|forward)+"
 
-" Mappings
-
+" Mappings 
 map <Leader>r reloadTabUncached
 map <Leader>x :restore<Space>
 
