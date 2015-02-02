@@ -13,28 +13,35 @@ let searchlimit = 30
 let scrollstep = 70
 let barposition = "bottom"
 
-let locale = "cn" " Current choices are 'jp' and 'uk'. This allows cVim to use sites like google.co.uk
-                  " or google.co.jp to search rather than google.com. Support is currently limited.
-                  " Let me know if you need a different locale for one of the completion/search engines
-let hintcharacters = "qweasdzxcfjlkonm12390"
+let locale = "cn" 
+" Current choices are 'jp' and 'uk'. This allows cVim to use sites like google.co.uk
+ " or google.co.jp to search rather than google.com. Support is currently limited.
+" Let me know if you need a different locale for one of the completion/search engines
+let hintcharacters = "qweasdzxcfjlkopnm"
 
-let searchengine baidu = "http://www.baidu.com/s?wd=%s" " If you leave out the '%s' at the end of the URL,
-                                                                    " your query will be appended to the link.
-                                                                    " Otherwise, your query will replace the '%s'.
+let searchengine baidu = "http://www.baidu.com/s?wd=%s" 
+" If you leave out the '%s' at the end of the URL,
+" your query will be appended to the link.
+" Otherwise, your query will replace the '%s'.
 
-let completionengines = ["google", "amazon", "imdb", "dogpile","baidu"]
+let completionengines = ["google", "baidu"]
 
-let searchalias g = "google" " Create a shortcut for search engines.
-                             " For example, typing ':tabnew g example'
-                             " would act the same way as ':tabnew google example'
+let searchalias g = "google" 
+let searchalias b = "baidu" 
+" Create a shortcut for search engines.
+" For example, typing ':tabnew g example'
+" would act the same way as ':tabnew google example'
 
 " Open all of these in a tab with `gnb` or open one of these with <N>goa where <N>
+"todo
 let qmark a = [ "http://www.google.com", "http://www.baidu.com"]
 
-let blacklists = ["https://mail.google.com/*", "*://mail.google.com/*"]
+let blacklists = ["https://mail.google.com/*",
+	"*://mail.google.com/*"
+	]
 let mapleader = ","
-let previousmatchpattern="((?!last)(prev(ious)?|back|芦|less|<|鈥箌 )+)"
-let nextmatchpattern="((?!first)(next|more|>|鈥簗禄|forward| )+)"
+let previousmatchpattern="(back|上一*|前一*|less|<)+"
+let nextmatchpattern="(next|more|>|下一*|后一*|forward)+"
 
 " Mappings
 
@@ -50,11 +57,15 @@ map <C-a> scrollPageUp
 map s scrollPageDown
 map w scrollPageUp
 
-map q :tabnew google
+map qq :tabnew google 
+map qw :tabnew google 
 map e f
 map E F
+
+"todo
 map ] ]]
 map [ [[
+
 " You can use <Space>, which is interpreted as a
 " literal " " character, to enter buffer completion mode
 map gb :buffer<Space>
