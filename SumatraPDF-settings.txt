@@ -1,0 +1,710 @@
+﻿# For documentation, see http://www.sumatrapdfreader.org/settings3.2.html
+
+MainWindowBackground = #80fff200
+EscToExit = false
+ReuseInstance = false
+UseSysColors = false
+RestoreSession = true
+
+FixedPageUI [
+	TextColor = #000000
+	BackgroundColor = #f5f5dc
+	SelectionColor = #f5fc0c
+	WindowMargin = 2 4 2 4
+	PageSpacing = 4 4
+]
+EbookUI [
+	FontName = Yahei Monaco
+	FontSize = 12.5
+	TextColor = #5f4b32
+	BackgroundColor = #fbf0d9
+	UseFixedPageUI = false
+]
+ComicBookUI [
+	WindowMargin = 0 0 0 0
+	PageSpacing = 4 4
+	CbxMangaMode = false
+]
+ChmUI [
+	UseFixedPageUI = false
+]
+ExternalViewers [
+]
+ShowMenubar = true
+ReloadModifiedDocuments = true
+FullPathInTitle = true
+ZoomLevels = 8.33 12.5 18 25 33.33 50 66.67 75 100 125 150 200 300 400 600 800 1000 1200 1600 2000 2400 3200 4800 6400
+ZoomIncrement = 0
+
+PrinterDefaults [
+	PrintScale = shrink
+]
+ForwardSearch [
+	HighlightOffset = 0
+	HighlightWidth = 15
+	HighlightColor = #6581ff
+	HighlightPermanent = false
+]
+CustomScreenDPI = 0
+
+RememberStatePerDocument = true
+UiLanguage = cn
+ShowToolbar = true
+ShowFavorites = false
+AssociateSilently = false
+CheckForUpdates = true
+RememberOpenedFiles = true
+EnableTeXEnhancements = false
+DefaultDisplayMode = automatic
+DefaultZoom = fit page
+WindowState = 2
+WindowPos = 2009 175 1595 1054
+ShowToc = true
+SidebarDx = 412
+TocDy = 818
+ShowStartPage = true
+UseTabs = true
+
+FileStates [
+	[
+		FilePath = G:\tem_ff\the-happy-linux-cli-en-cn.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = Z:\work\git\CS_EBooks\01_programming\The Linux Programming Interface.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 31
+		PageNo = 11
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = K:\professional\Linux & unix_system\O'Reilly.Linux.in.a.Nutshell,6th.Edition.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 269
+		PageNo = 15
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 2
+	]
+	[
+		FilePath = Z:\work\git\PHPSB-books\Linux高性能服务器编程.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 734
+		PageNo = 366
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = K:\professional\Linux & unix_system\linux权威指南(第三版).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 19
+		PageNo = 8
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = W:\Professional\UNIX_PROGRAMMING\LinuxC编程一站式学习.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 12
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = W:\Professional\UNIX_PROGRAMMING\linux_programming_unleashed.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 843
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = K:\professional\linux kernel\Linux_Networking_Cookbook.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 72
+		PageNo = 15
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = K:\professional\Linux & unix_system\linux_101_hacks_cn.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 30
+		PageNo = 33
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = K:\professional\Linux & unix_system\Linux.The.Complete.Reference,Sixth.Edition.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 425
+		PageNo = 743
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 4 7 12 16 23 29 36 44
+	]
+	[
+		FilePath = W:\FTP\bt\IT\IT\操作系统\使用教程\Linux 从入门到精通.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 28
+		PageNo = 9
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = false
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = Z:\work\git\PHPSB-books\linux C编程实战.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 11
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = K:\professional\UNIX_PROGRAMMING\Linux C函数库参考手册.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 15
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = false
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = K:\professional\UNIX_PROGRAMMING\GNU Linux编程指南（第二版）.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 158
+		PageNo = 18
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = K:\professional\UNIX_PROGRAMMING\Beginning.Linux.Programming第4版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 22
+		PageNo = 131
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 30
+	]
+	[
+		FilePath = K:\professional\UNIX_PROGRAMMING\Advanced Linux Programming.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 624
+		PageNo = 36
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = false
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = H:\NetStore\Doc\org-mode-9-1-14.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 1
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 470
+		PageNo = 31
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 7 23 40
+	]
+	[
+		FilePath = K:\professional\O Reilly\O_Reilly  Pocket Guide_袖珍参考手册 合集\[Linux.Pocket.Guide(1st,2004)].Daniel.J.Barrett.文字版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 2
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 397
+		PageNo = 22
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 2 62 63 71 95 109
+	]
+	[
+		FilePath = K:\professional\O Reilly\O_Reilly 计算机图书2011年9月合集\[Linux.Server.Hacks(第1版)].(Linux.Server.Hacks.2003).Rob.Flickenger.文字版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 2
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 269
+		PageNo = 11
+		Zoom = 200
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 6 7 13 52
+	]
+	[
+		FilePath = K:\professional\c\K&R\C程序设计语言(英文第2版)Prentice Hall.-.The C Programming Language(2nd Edition).pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 3
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 249
+		PageNo = 159
+		Zoom = 125
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = G:\tem2\ePUBw.COM - 黑客\ePUBw.COM - 黑客.pdf
+		Favorites [
+			[
+				Name = Start
+				PageNo = 14
+			]
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 5
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 0
+		PageNo = 14
+		Zoom = 125
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = H:\NetStore\我的坚果云\Doc\哥德尔、艾舍尔、巴赫.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 6
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 450
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = false
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = H:\NetStore\我的坚果云\Doc\CSAPP2e.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 6
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 275
+		PageNo = 288
+		Zoom = 150
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 7
+	]
+	[
+		FilePath = H:\NetStore\我的坚果云\Doc\Learn C the Hard Way[X7].pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 7
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 376
+		PageNo = 176
+		Zoom = 125
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 21
+	]
+	[
+		FilePath = H:\NetStore\Doc\C++ Primer Fifth Edition-v2.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 7
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 627
+		PageNo = 30
+		Zoom = 125
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 2009 175 1595 1054
+		ShowToc = true
+		SidebarDx = 412
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 4 56 66
+	]
+	[
+		FilePath = H:\NetStore\我的坚果云\Doc\程序员的自我修养—链接、装载与库.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 -1
+		PageNo = 16
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1930 0 1528 1417
+		ShowToc = true
+		SidebarDx = 375
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = H:\NetStore\我的坚果云\Doc\编程原本.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 127
+		PageNo = 15
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1930 0 1528 1417
+		ShowToc = false
+		SidebarDx = 375
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = D:\work_smart\AVMedia\CD750\DS_CD750_EN_20181031-1.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 661
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1930 0 1528 1417
+		ShowToc = false
+		SidebarDx = 375
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = G:\tem_ff\【2】现代操作系统（第三版）中文版.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 542
+		PageNo = 11
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1930 0 1528 1417
+		ShowToc = true
+		SidebarDx = 375
+		DisplayR2L = false
+		ReparseIdx = 0
+	]
+	[
+		FilePath = H:\NetStore\我的坚果云\Doc\algorithm\Algorithms-JeffE.pdf
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = continuous
+		ScrollPos = -1 618
+		PageNo = 21
+		Zoom = 150
+		Rotation = 0
+		WindowState = 1
+		WindowPos = 1930 0 1528 1417
+		ShowToc = true
+		SidebarDx = 375
+		DisplayR2L = false
+		ReparseIdx = 0
+		TocState = 10 25
+	]
+	[
+		FilePath = W:\book1\经管\史玉柱自述：我的营销心得.mobi
+		Favorites [
+		]
+		IsPinned = false
+		IsMissing = false
+		OpenCount = 0
+		UseDefaultState = false
+		DisplayMode = facing
+		ScrollPos = 0 0
+		PageNo = 1
+		Zoom = fit page
+		Rotation = 0
+		WindowState = 2
+		WindowPos = 252 0 1113 1050
+		ShowToc = true
+		SidebarDx = 276
+		DisplayR2L = false
+		ReparseIdx = 60238
+		TocState = 1 2
+	]
+]
+SessionData [
+]
+TimeOfLastUpdateCheck = 0 0
+OpenCountWeek = 435
+
+# Settings after this line have not been recognized by the current version
