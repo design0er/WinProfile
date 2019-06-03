@@ -1,0 +1,110 @@
+customization:
+  distribution_code_name: ""
+  distribution_version: ""
+  generator: "Rime-JNI"
+  modified_time: "Fri Feb  8 14:00:39 2019"
+  rime_version: 1.2.9
+patch:
+  "present_keyboards/double_pinyin_mspy/import_preset": terra_pinyin
+# 1、新建一个键盘布局xkey  
+  "preset_keyboards/xkey":  #布局ID  
+    author: "xq"   #作者  
+    name: "数字+操作键"  #方便自己辨识的名字  
+    ascii_mode: 1 #默认进入英文状态  
+    height: 44   #每行高度  
+    width: 11   #按键默认宽度（取所有按键中用得较多的宽度值，接下来就可以少写一些width了）  
+    keys:   #按键排列  
+      # 第一行  
+      - {click: "#", long_click: cut}  
+      - {click: "%", long_click: copy}  
+      - {click: "@", long_click: paste}  
+      - {click: "+", width: 13}  
+      - {click: 7, width: 18}  
+      - {click: 8, width: 18}  
+      - {click: 9, width: 18}  
+      # 第二行  
+      - {click: Page_Up}  
+      - {click: Up}  
+      - {click: Page_Down}  
+      - {click: "-", width: 13}  
+      - {click: 4, width: 18}  
+      - {click: 5, width: 18}  
+      - {click: 6, width: 18}  
+      # 第三行  
+      - {click: Left}  
+      - {click: Tab}  
+      - {click: Right}  
+      - {click: "×", width: 13}  
+      - {click: 1, width: 18}  
+      - {click: 2, width: 18}  
+      - {click: 3, width: 18}  
+      # 第四行  
+      - {click: Home}  
+      - {click: Down}  
+      - {click: End}  
+      - {click: "÷", width: 13}  
+      - {click: ",", width: 18}  
+      - {click: 0, width: 18}  
+      - {click: BackSpace, width: 18}  
+      # 第五行  
+      - {click: Keyboard_default, long_click: Menu, width: 18}  
+      - {click: "±", width: 14.9} #如果上下的按键没有严格对齐，可以微调宽度  
+      - {click: "=", width: 13}  
+      - {click: space, width: 18}  
+      - {click: ., width: 18}  
+      - {click: Return, width: 18}  
+  "preset_keys/Keyboard_xkey":   #按键ID  
+    label: XKS    #按键标签  
+    send: Eisu_toggle  #执行切换键盘命令  
+    select: xkey   #选择xkey键盘  
+# 1、新建一个键盘布局hackey  
+  "preset_keyboards/hackey":  #布局ID  
+    author: "design0er"   #作者  
+    name: "terminal+key"  #方便自己辨识的名字  
+    ascii_mode: 1 #默认进入英文状态  
+    height: 44   #每行高度  
+    width: 11   #按键默认宽度（取所有按键中用得较多的宽度值，接下来就可以少写一些width了）  
+    keys:   #按键排列  
+      # 第一行  
+      - {click: Escape }  
+      - {click: Control_L}  
+      - {click: Shift_L}  
+      - {click: Alt_L, width: 13}  
+      - {click: Tab, width: 18}  
+      - {click: "\\", width: 18}  
+      - {click: "/", width: 18}  
+      # 第二行  
+      - {click: Page_Up}  
+      - {click: Up}  
+      - {click: Page_Down}  
+      - {click: "-", width: 13}  
+      - {click: _, width: 18}  
+      - {click: "\"", width: 18}  
+      - {click: "'", width: 18}  
+      # 第三行  
+      - {click: Left}  
+      - {click: Tab}  
+      - {click: Right}  
+      - {click: "×", width: 13}  
+      - {click: "`", width: 18}  
+      - {click: ":", width: 18}  
+      - {click: ".", width: 18}  
+      # 第四行  
+      - {click: Home}  
+      - {click: Down}  
+      - {click: End}  
+      - {click: "÷", width: 13}  
+      - {click: ",", width: 18}  
+      - {click: Caps_Lock, width: 18}  
+      - {click: BackSpace, width: 18}  
+      # 第五行  
+      - {click: Keyboard_default, long_click: Menu, width: 18}  
+      - {click: "±", width: 14.9} #如果上下的按键没有严格对齐，可以微调宽度  
+      - {click: "=", width: 13}  
+      - {click: Space, width: 18}  
+      - {click: ., width: 18}  
+      - {click: Return, width: 18}  
+  "preset_keys/Keyboard_hackey":   #按键ID  
+    label: HHK    #按键标签  
+    send: Eisu_toggle  #执行切换键盘命令  
+    select: hackey   #选择xkey键盘  
