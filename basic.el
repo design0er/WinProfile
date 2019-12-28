@@ -37,9 +37,10 @@
 ;(server-start)
 
 ;;; proxy
-;(setq url-proxy-services '(("no_proxy" . "localhost")
-;                           ("http" . "http://127.0.0.1:1080")
-;			   ("https" . "https://127.0.0.1:1080")))
+;(setq url-using-proxy t)
+;(setq url-proxy-services '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
+;                           ("http" . "127.0.0.1:1081")
+;			   ("https" . "127.0.0.1:1081")))
 
 ;;;----------------------char coding
 (prefer-coding-system 'utf-8)
@@ -58,6 +59,7 @@
 
 
 ;;;----------------------Melpa Repo
+(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -77,6 +79,8 @@ There are two things you can do about this warning:
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
 
+(require 'use-package)
+
 ;;;----------------------Font
 ;;; refer : http://baohaojun.github.io/perfect-emacs-chinese-font.html
 ;;; refer : http://zhuoqiang.me/torture-emacs.html
@@ -87,14 +91,14 @@ There are two things you can do about this warning:
 ;(set-face-attribute 'default nil :font (font-spec))
 
 ;; Setting English Font
-(setq en-font-size 12)
-(set-face-attribute 'default nil :font "Fira Code 12")
+(setq en-font-size 9)
+(set-face-attribute 'default nil :font "Fira Code 9")
 
 ;; Chinese Font
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font)
-                    charset (font-spec :family "Microsoft Yahei")))
-(setq face-font-rescale-alist '(("WenQuanYi Zen Hei" . 1.2)("微软雅黑" . 1.2)("Microsoft Yahei" . 1.2) ))
+                    charset (font-spec :family "WenQuanYi Zen Hei Mono")))
+(setq face-font-rescale-alist '(("WenQuanYi Zen Hei Mono" . 1.2)("微软雅黑" . 1.2)("Microsoft Yahei" . 1.2) ))
 
 ;;; italic
 (set-face-font 'italic (font-spec :family "Source Code Pro" :slant 'italic :weight 'normal :size (+ 0.0 en-font-size)))
@@ -184,6 +188,8 @@ There are two things you can do about this warning:
 (evil-mode 1)
 (evil-set-initial-state 'Info-mode 'emacs)
 (evil-set-initial-state 'calendar-mode 'emacs)
+(evil-set-initial-state 'Image-mode 'emacs)
+(evil-set-initial-state 'dired-mode 'emacs)
 (evil-leader/set-leader "SPC")
 
 ;;; combine with helm buffer list `C-x b`
@@ -274,12 +280,19 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-2") 'avy-goto-line)
 
 ;;;org mode
+(require 'org)
 (setq org-image-actual-width nil)
 
 (global-set-key (kbd "C-c o") 'multi-occur-in-matching-buffers)
 
 (global-set-key "\C-c L" 'org-insert-link-global)
 ;(global-set-key (kbd "C-c t") 'org-time-stamp)
+
+;remove for other use
+(define-key org-mode-map (kbd "M-h") nil)
+(define-key org-mode-map (kbd "M-l") nil)
+(define-key org-mode-map (kbd "M-j") nil)
+(define-key org-mode-map (kbd "M-k") nil)
 
 (setq org-closed-keep-when-no-todo t)
 (setq org-log-done 'note)
@@ -365,9 +378,18 @@ There are two things you can do about this warning:
 ;;;dired
 ;文件管理器
 (global-set-key [f5] 'dired-jump)
+(put 'dired-find-alternate-file 'disabled nil)
+(setq dired-listing-switches "-laGh1v --group-directories-first --time-style \"+%Y-%m-%d %H:%M:%S\"")
+
+(setq directory-listing-before-filename-regexp
+      (purecopy (concat "\\([0-2][0-9]:[0-5][0-9] \\)\\|"
+                        directory-listing-before-filename-regexp)))
+(setq dired-dwim-target t)
 (add-hook 'dired-mode-hook (lambda ()
   (interactive)
   (make-local-variable  'dired-sort-map)
+  (dired-hide-details-mode)
+  ;(dired-sort-toggle-or-edit)
   (setq dired-sort-map (make-sparse-keymap))
   (define-key dired-mode-map "s" dired-sort-map)
   (define-key dired-sort-map "s"
@@ -383,8 +405,58 @@ There are two things you can do about this warning:
               '(lambda () "sort by Name"
                  (interactive) (dired-sort-other (concat dired-listing-switches ""))))))
 
-  ;;; dired
-  (setq dired-listing-switches "-alh")
+(defun xah-open-in-external-app (&optional @fname)
+  "Open the current file or dired marked files in external app.
+The app is chosen from your OS's preference.
+When called in emacs lisp, if @fname is given, open that.
+URL `http://ergoemacs.org/emacs/emacs_dired_open_file_in_ext_apps.html'
+Version 2019-11-04"
+  (interactive)
+  (let* (
+         ($file-list
+          (if @fname
+              (progn (list @fname))
+            (if (string-equal major-mode "dired-mode")
+                (dired-get-marked-files)
+              (list (buffer-file-name)))))
+         ($do-it-p (if (<= (length $file-list) 5)
+                       t
+                     (y-or-n-p "Open more than 5 files? "))))
+    (when $do-it-p
+      (cond
+       ((string-equal system-type "windows-nt")
+        (mapc
+         (lambda ($fpath)
+           (w32-shell-execute "open" $fpath)) $file-list))
+       ((string-equal system-type "darwin")
+        (mapc
+         (lambda ($fpath)
+           (shell-command
+            (concat "open " (shell-quote-argument $fpath))))  $file-list))
+       ((string-equal system-type "gnu/linux")
+        (mapc
+         (lambda ($fpath) (let ((process-connection-type nil))
+                            (start-process "" nil "xdg-open" $fpath))) $file-list))))))
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "<C-return>") 'xah-open-in-external-app)
+  ;(define-key dired-mode-map "n" 'dired-subtree-insert)
+  ;(define-key dired-mode-map "u" 'dired-subtree-remove)
+  ;(define-key dired-mode-map "o" 'xah-open-in-external-app)
+  (define-key dired-mode-map "h" 'dired-up-directory)
+  (define-key dired-mode-map "l" 'dired-find-alternate-file)
+  (define-key dired-mode-map "k" 'dired-previous-line)
+  (define-key dired-mode-map "j" 'dired-next-line))
+
+(with-eval-after-load 'ggtags
+  (define-key dired-mode-map (kbd "<M-.>") 'dired-next-line))
+
+(setq dired-listing-switches "-alh")
+(use-package dired-subtree
+  :config
+  (bind-keys :map dired-mode-map
+             ("i" . dired-subtree-insert)
+             (";" . dired-subtree-remove)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;           program         ;;;;;;;;;;;;
@@ -500,7 +572,7 @@ There are two things you can do about this warning:
 
 ;;; sr-speedbar
 (global-set-key (kbd "M-1") 'sr-speedbar-toggle)
-(setq sr-speedbar-width-x 240)
+(setq sr-speedbar-width-x 140)
 (setq sr-speedbar-max-width 440)
 (setq speedbar-use-images nil)
 
@@ -510,3 +582,14 @@ There are two things you can do about this warning:
 ;;; writeroom
 ;package-install
 (setq writeroom-width 90)
+
+;;; projectile
+(require 'projectile)
+(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(projectile-mode +1)
+
+;;; Programming
+
+;;; c#
+(add-hook 'csharp-mode-hook 'omnisharp-mode)

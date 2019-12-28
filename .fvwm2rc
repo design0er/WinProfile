@@ -18,7 +18,7 @@ AddToFunc StartFunction
 # + I Module FvwmIdent
  + I Exec exec xloadimage -onroot /home/hunter/img/bg1.jpg
  + I Exec exec xosview -g 600x200+1400-340
- + I Exec exec xclock -g 140x140+1400-0
+ + I Exec exec xclock -g 140x140+1400-0 -fg white -bg black
 
 AddToFunc InitFunction
  + I Module FvwmBanner
@@ -31,14 +31,21 @@ AddToFunc InitFunction
 AddToFunc SessionInitFunction
  + I Nop
 
+# 关闭显示屏函数
+DestroyFunc LockScreen
+AddToFunc LockScreen
++ I Exec sleep 1; xset dpms force off
+
 ######################
 # Global
-HideGeometryWindow Never
+HideGeometryWindow Always
 
 #Animation
 SetAnimation  1 -.01 0 .01 .03 .08 .18 .3 .45 .6 .75 .85 .20 .24 .27 .29 1.0
+*FvwmAnimate: Color blue
 *FvwmAnimate: Delay 25
-*FvwmAnimate: Effect Random
+*FvwmAnimate: Iterations 5
+*FvwmAnimate: Effect Zoom3D
 *FvwmAnimate: Width 3
 
 # Color
@@ -46,9 +53,11 @@ CleanupColorsets
 
 Colorset 0 fg green, bg black
 Colorset 1 fg black, bg white
-#Colorset 3 fg #101060, bg #e6e7d7
-#Colorset 4 fg Black, bg #a6a797
+Colorset 3 fg white, bg #1883f1
+Colorset 4 fg Black, bg #cccccc,sh white,fgsh white
 #Colorset 5 fg White, bg Black
+Colorset 6 fg blue, bg #d0d0d0
+Colorset 7 fg white, bg #1883f1
 
 #ColormapFocus FollowsMouse
 DefaultColors White Black
@@ -71,7 +80,7 @@ AddToDecor   MyDecor
 + ButtonStyle All -- UseTitleStyle
 
 # Font
-DefaultFont  "xft:Source Code Pro:encoding=iso10646-1:pixelsize=14:antialias=True"
+DefaultFont  "xft:Yahei Monaco:encoding=iso10646-1:pixelsize=12:Antialias=True:encoding=en_US.UTF-8"
 
 # Virtual Desktops
 DesktopSize 3x3
@@ -81,17 +90,21 @@ DesktopSize 3x3
 
 # Edge
 EdgeScroll 0 0
-#EdgeResistance 150  150
+EdgeResistance 2
 EdgeThickness 0
 #SnapAttraction 15
-
+Style * EdgeMoveDelay 15
+Style * EdgeMoveResistance 100
+EdgeCommand Top WindowList -50p +0p
+OpaqueMoveSize unlimited
+Style * SnapGrid 1 1
 # Click
 ClickTime 350
 MoveThreshold 3
 
 # Style
-Style *   Font "xft:Source Code Pro:encoding=iso10646-1:pixelsize=14:antialias=True"
-Style *   IconFont  "xft:Source Code Pro:encoding=iso10646-1:pixelsize=12:antialias=True"
+Style *   Font "xft:Yahei Monaco:encoding=iso10646-1:pixelsize=12:antialias=True",ColorSet 1,HilightColorset 2
+Style *   IconFont  "xft:Yahei Monaco:encoding=iso10646-1:pixelsize=12:antialias=True"
 Style *   HilightFore yellow, HilightBack blue
 Style *   SnapAttraction 15
 #Style *   Icon unknown1.xpm, Color lightgrey/dimgrey
@@ -108,24 +121,26 @@ Style "*" BorderWidth 2, HandleWidth 4
 Style "*" MWMBorder, FirmBorder
 Style "*" Colorset 4
 Style "*" HilightColorset 3
-Style "*" BorderColorset 5
-Style "*" HilightBorderColorset 4
+Style "*" BorderColorset 4
+Style "*" HilightBorderColorset 3
+Style "*" MinOverlapPlacement
 
 # menu
 MenuStyle * Hilight3DOff, !HilightBack
 MenuStyle * ActiveFore Yellow
-Menustyle * fvwm, Font  "Shadow=1 n:xft:Source Code Pro:encoding=iso10646-1:pixelsize=14:antialias=True"
+Menustyle * fvwm, Font  "Shadow=1 n:xft:Yahei Monaco:encoding=iso10646-1:pixelsize=12:antialias=True"
 #MenuStyle * Foreground green, Background black, Greyed grey40
 MenuStyle * MenuFace VGradient 64 darkgray MidnightBlue
 
 # Styles for various Fvwm modules:
-Style "Fvwm*"       Title, WindowListSkip
+Style "Fvwm*"       !Title,!Borders,!Iconifiable, WindowListSkip,!FixedPosition,FixedSize,Sticky,Layer 0
 Style "Fvwm*"       BorderWidth 1, CirculateSkipIcon, CirculateSkip
 Style "FvwmPager" StickyAcrossDesks ,StickyAcrossPages, !Handles, Borders,  WindowListSkip, \
   CirculateSkip, StaysOnBottom, FixedPosition, FixedSize, !Iconifiable,\
   FPLenient
 Style "FvwmBanner"  StaysOnTop
-Style "FvwmButtons" Icon toolbox.xpm, ClickToFocus
+Style "FvwmButtons" Icon toolbox.xpm, ClickToFocus,NeverFocus
+Style "FvwmIdent" Title
 
 # Styles for your common terminal emulator programs:
 #Style "XTerm"       Icon xterm.xpm, SloppyFocus, IconBox -70 1 -1 -140
@@ -152,8 +167,15 @@ AddToMenu RootMenu	"Root Menu"	Title
 +			"XTerm"		Exec exec xterm
 +			"urxvt"		Exec exec urxvt
 +			"Firefox"	Exec exec firefox
-+			"Emacs"		Exec exec emacs
++			"chrome"	Exec exec google-chrome
++			"Emacs"		Exec exec proxychains4 emacs
 +			"Vim"		Exec exec vim
++			"virt"		Exec exec virt-manager
++			"xpdf"		Exec exec xpdf
++			"psensor"		Exec exec psensor
++			"htop"		Exec exec xterm htop
++			"vlc"		Exec exec vlc
++			"Lock"		LockScreen
 +			""		Nop
 +			"Remote Logins"	Popup Remote-Logins
 +			""		Nop
@@ -173,6 +195,7 @@ AddToMenu Utilities     "Utilities" Title
 +			"Calculator"	Exec exec xcalc
 +			"Xman"		Exec exec xman
 +			"Xmag"		Exec exec xmag
++			"Xclock"		Exec exec xclock
 +                       "Editres"       Exec exec editres
 +			""		Nop
 +                       "Mail"          MailFunction xmh "-font fixed"
@@ -350,6 +373,8 @@ AddToFunc Maximize-Func		M Maximize	 0 100
 +				C Maximize	 0 80
 +				D Maximize	 100 100
 
+AddToFunc Maximize-Vec		I Maximize	 0 100
+
 AddToFunc Move-or-Iconify	I Raise
 +				M Move
 +				D Iconify
@@ -386,26 +411,62 @@ AddToFunc DeiconifyFocusAndWarp I Iconify -1
 AddToFunc ChangeDefaultFocus I Style * $0
 +                            I Recapture
 
+# Alt+tab 显示任务切换
+Key Tab A M -
+Key Tab A M alttab
 
+DestroyFunc WindowListFunc
+AddToFunc WindowListFunc
++ I Iconify off
++ I FlipFocus
++ I Raise
++ I WarpToWindow 50 50
++ I Pick (CirculateHit) Layer 0 4
+
+AddToFunc alttab
++ I Next (AcceptsFocus CurrentDesk CurrentPage !Iconic) Focus
++ I Prev (AcceptsFocus CurrentDesk CurrentPage !Iconic) WarpToWindow 50 50
++ I WindowList Root c c NoCurrentDeskTitle,NoGeometry,CurrentDesk,Icons,Sticky, \
+                        OnTop,OnBottom,MaxLabelWidth 320,IconifiedAtEnd,SelectOnRelease Alt_L
+# 层叠窗口
+DestroyFunc WindowTo2Col
+AddToFunc WindowTo2Col
++ I All (CurrentPage,!Fvwm*, !gkrellm, !trayer) WindowShade off
++ I Piperead 'echo FvwmRearrange -tile -animate -resize -mn 2 -m \
+  $[EWMH-BS-Panel-Left]p $[EWMH-BS-Panel-Top]p `expr -e $[vp.width] - \
+    $[EWMH-BS-Panel-Right]`p `expr -e $[vp.height] - $[EWMH-BS-Panel-Bottom]`p'
+
+    DestroyFunc WindowTo2Row
+    AddToFunc WindowTo2Row
+    + I All (CurrentPage,!Fvwm*, !gkrellm, !trayer) WindowShade off
+    + I Piperead 'echo FvwmRearrange -tile -animate -resize -mn 2 -m -h \
+      $[EWMH-BS-Panel-Left]p $[EWMH-BS-Panel-Top]p `expr -e $[vp.height] - \
+        $[EWMH-BS-Panel-Bottom]`p `expr -e $[vp.width] - $[EWMH-BS-Panel-Right]`p'
+
+Key F6      AT    M Function WindowTo2Col
+Key F7      AT    M Function WindowTo2Row
 ######################
 # global key binding
 ######################
-Key F1 A A Module FvwmIdent
-Key F4 A A Quit
-Key F6 A A Exec exec xterm
-Key F7 A A Exec exec urxvt
-Key F8 A A  Current Exec exec xmessage -print $[desk.n] $[desk.width] $[desk.height] \
-	$[page.nx] $[page.ny] $[w.class]
-Key F9 A A Module FvwmIconMan
-Key F10 A A Module  FvwmPager 0 3
-Key F11 A A Module FvwmConsole -g 80x40
-Key F12 A A Restart
+Key F1 A 4 Module FvwmIdent
+Key F2 A 4 Exec exec xterm alsamixer
+Key F4 A 4 Quit
+#Key F4 A S4 LockScreen
+#Key F6 A 4 Exec exec xterm
+#Key F7 A 4 Exec exec urxvt
+Key F8 A 4  Current Exec exec xmessage -print $[desk.n] $[desk.width] $[desk.height] \
+	$[pag4.nx] $[page.ny] $[w.class]
+Key F9 A 4 Module FvwmIconMan
+Key F10 A 4 Module  FvwmPager 0 3
+Key F11 A 4 Module FvwmConsole -g 80x40
+Key F12 A 4 Restart
 #Key F12 A A Menu MenuFvwmRoot
-Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
+#Key Tab A M WindowList Root c c NoDeskSort, SelectOnRelease Meta_L
 #Key Super_L A A Exec exec rxvt -bg black -fg green
 
 Key w A 4 Maximize 100 100
 Key a A 4 Maximize-Func
+Key d A 4 Maximize-Vec
 Key c A 4 Iconify True
 
 #### desktop
@@ -465,7 +526,7 @@ Key Prior        A       SCM     Prev (AcceptsFocus) Focus
 Mouse 1	R   	A       Menu RootMenu Nop
 Mouse 2	R    	A      	Menu Window-Ops Nop
 Mouse 2	FST  	A      	SelectWindow
-#Mouse 3	R    	A      	WindowList
+Mouse 3	R    	A      	WindowList
 #
 ##   for the title bar buttons:
 Mouse 0	1    	A      	Close
@@ -489,12 +550,18 @@ Mouse 0	2    	A     	Maximize 100 100
 #Mouse 3	TSIF	A	RaiseLower
 Mouse 1 A C Scroll reverse
 
+Mouse 4   R     C   None (Maximized, Raised, Focused, !Iconic) Prev \
+                    (CurrentPage, AcceptsFocus, !Iconic) EWMHActivateWindowFunc
+Mouse 5   R     C   None (Maximized, Raised, Focused, !Iconic) Next \
+                    (CurrentPage, AcceptsFocus, !Iconic) EWMHActivateWindowFunc
+Mouse 4   AT    M   WindowTo2Col
+Mouse 5   AT    M   WindowTo2Row
 ################## FvwmButtons button-bar ################################
 *FvwmButtons: BoxSize smart
 #*FvwmButtons: Rows 3
 #*FvwmButtons: Columns 4
 *FvwmButtons: Geometry 280x188+1540-0
-*FvwmButtons: Font "xft:Sans:Bold:pixelsize=12"
+*FvwmButtons: Font "xft:Sans:Bold:pixelsize=10"
 *FvwmButtons: Back white
 *FvwmButtons: Fore blue
 *FvwmButtons: (Title "Xterm", Icon /usr/local/share/fvwm/pixmaps/mini.xterm_48x48.xpm, Action (Mouse1) Exec xterm)
@@ -521,7 +588,7 @@ Mouse 1 A C Scroll reverse
 ##*MyButtons: Colorset 9
 #*MyButtons: Rows 38
 #*MyButtons: Columns 1
-#*MyButtons: Font "Shadow=1 E:xft:Source Code Pro:Bold:pixelsize=14:minspace=True:antialias=True"
+#*MyButtons: Font "Shadow=1 E:xft:Yahei Monaco:Bold:pixelsize=14:minspace=True:antialias=True"
 #*MyButtons: (1x2,Title(Center) "FVWM")
 #*MyButtons: (Title  "FvwmATerm",1x5, Action(Mouse 1) "FvwmATerm", Action(Mouse 3) "FvwmXTerm")
 #*MyButtons: (Title "Xterm", Icon /usr/share/pixmaps/mini.xterm_48x48.xpm, Action (Mouse1) Exec xterm)
@@ -538,7 +605,7 @@ Mouse 1 A C Scroll reverse
 *FvwmIconMan: Resolution  global
 *FvwmIconMan: background  bisque3
 *FvwmIconMan: foreground  black
-*FvwmIconMan: font          "xft:Source Code Pro:encoding=iso10646-1:pixelsize=12"
+*FvwmIconMan: font          "xft:Yahei Monaco:encoding=iso10646-1:pixelsize=10"
 *FvwmIconMan: format      "%c: %i" "%t"
 *FvwmIconMan: action      Mouse   1 N sendcommand Focus, sendcommand "Iconify"
 *FvwmIconMan: action      Mouse   2 N sendcommand "Iconify 1"
@@ -558,12 +625,12 @@ Mouse 1 A C Scroll reverse
 # Just choose colors and a fonts
 *FvwmIdent: Back MidnightBlue
 *FvwmIdent: Fore Yellow
-*FvwmIdent: Font  "xft:Source Code Pro:encoding=iso10646-1"
+*FvwmIdent: Font  "xft:Yahei Monaco:encoding=iso10646-1"
 
 ########################### Pager #########################################
 *FvwmPager: Back black
 *FvwmPager: Fore white
-*FvwmPager: Font "xft:Source Code Pro:encoding=iso10646-1"
+*FvwmPager: Font "xft:Yahei Monaco:encoding=iso10646-1"
 *FvwmPager: Hilight #cab3ca
 *FvwmPager: Geometry 1250x420+220-0
 *FvwmPager: Label 0 Sys
@@ -574,7 +641,7 @@ Mouse 1 A C Scroll reverse
 *FvwmPager: Balloons            All
 *FvwmPager: BalloonBack         Yellow
 *FvwmPager: BalloonFore         Black
-*FvwmPager: BalloonFont  "xft:Source Code Pro:encoding=iso10646-1"
+*FvwmPager: BalloonFont  "xft:Yahei Monaco:encoding=iso10646-1"
 *FvwmPager: BalloonYOffset      +2
 *FvwmPager: BalloonBorderWidth  1
 *FvwmPager: BalloonBorderColor  Black
@@ -586,7 +653,7 @@ Mouse 1 A C Scroll reverse
 ##########################FvwmWinList##################################
 *FvwmWinList: Back yellow
 *FvwmWinList: Fore Black
-*FvwmWinList: Font  "xft:Source Code Pro:encoding=iso10646-1:pixelsize=12"
+*FvwmWinList: Font  "xft:Yahei Monaco:encoding=iso10646-1:pixelsize=14"
 *FvwmWinList: Action Click1 Iconify -1,Focus
 *FvwmWinList: Action Click2 Iconify
 *FvwmWinList: Action Click3 Module "FvwmIdent" FvwmIdent
@@ -614,7 +681,7 @@ Mouse 1 A C Scroll reverse
 ##*FvwmIconBox: Fore       blue
 #*FvwmIconBox: Geometry    5x1+0+0
 #*FvwmIconBox: MaxIconSize 64x38
-#*FvwmIconBox: Font          "xft:Source Code Pro:encoding=iso10646-1"
+#*FvwmIconBox: Font          "xft:Yahei Monaco:encoding=iso10646-1"
 #*FvwmIconBox: SortIcons   IconName
 #*FvwmIconBox: Padding     4
 #*FvwmIconBox: Lines       10

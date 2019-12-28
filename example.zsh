@@ -8,3 +8,6 @@
 # brainstormr=~/Projects/development/planetargon/brainstormr
 # cd $brainstormr
 #
+alias ls1="ls -alh1"
+export LIBVIRT_DEFAULT_URI='qemu:///system'
+export PATH=$PATH:/usr/local/go/bin:~/.local/bin
