@@ -531,7 +531,7 @@ Version 2019-11-04"
 ;(load-theme 'deeper-blue t)
 
 ;;; default tango theme : dark theme but less dark of bg color, almost a light bright theme.
-(load-theme 'tango-dark t)
+;(load-theme 'tango-dark t)
 
 ;;; dracula : dark theme for many app, protable
 ;;; package-install : dracula-theme
