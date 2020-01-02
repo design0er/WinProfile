@@ -190,7 +190,17 @@ There are two things you can do about this warning:
 (evil-set-initial-state 'calendar-mode 'emacs)
 (evil-set-initial-state 'Image-mode 'emacs)
 (evil-set-initial-state 'dired-mode 'emacs)
+(evil-set-initial-state 'XREF-mode 'emacs)
+(evil-set-initial-state 'Help-mode 'emacs)
 (evil-leader/set-leader "SPC")
+
+;;; evil state cursor
+(setq evil-emacs-state-cursor '((hbar . 2) "red"))
+(setq evil-normal-state-cursor '(box   "yellow"))
+;(setq evil-motion-state-cursor 'box)  ; █
+;(setq evil-visual-state-cursor 'box)  ; █
+;(setq evil-normal-state-cursor 'box)  ; █
+;(setq evil-insert-state-cursor 'bar)  ; ⎸
 
 ;;; combine with helm buffer list `C-x b`
 ;;; default `ibuffer list `C-x C-b`
@@ -391,7 +401,7 @@ There are two things you can do about this warning:
   (dired-hide-details-mode)
   ;(dired-sort-toggle-or-edit)
   (setq dired-sort-map (make-sparse-keymap))
-  (define-key dired-mode-map "s" dired-sort-map)
+  ;(define-key dired-mode-map "s" dired-sort-map)
   (define-key dired-sort-map "s"
               '(lambda () "sort by Size"
                 (interactive) (dired-sort-other (concat dired-listing-switches "S"))))
@@ -442,7 +452,7 @@ Version 2019-11-04"
   (define-key dired-mode-map (kbd "<C-return>") 'xah-open-in-external-app)
   ;(define-key dired-mode-map "n" 'dired-subtree-insert)
   ;(define-key dired-mode-map "u" 'dired-subtree-remove)
-  ;(define-key dired-mode-map "o" 'xah-open-in-external-app)
+  (define-key dired-mode-map "i" 'xah-open-in-external-app)
   (define-key dired-mode-map "h" 'dired-up-directory)
   (define-key dired-mode-map "l" 'dired-find-alternate-file)
   (define-key dired-mode-map "k" 'dired-previous-line)
@@ -452,11 +462,12 @@ Version 2019-11-04"
   (define-key dired-mode-map (kbd "<M-.>") 'dired-next-line))
 
 (setq dired-listing-switches "-alh")
-(use-package dired-subtree
-  :config
-  (bind-keys :map dired-mode-map
-             ("i" . dired-subtree-insert)
-             (";" . dired-subtree-remove)))
+
+;(use-package dired-subtree
+;  :config
+;  (bind-keys :map dired-mode-map
+;             ("i" . dired-subtree-insert)
+;             (";" . dired-subtree-remove)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;           program         ;;;;;;;;;;;;
@@ -541,7 +552,8 @@ Version 2019-11-04"
 (setq visible-bell nil)
 
 (global-set-key (kbd "C-`") 'set-mark-command)
-(global-set-key (kbd "C-1") `linum-mode)
+;(global-set-key (kbd "C-1") `linum-mode)
+(setq display-line-numbers 'relative)
 		
 (global-set-key (kbd "<f11>") 'follow-delete-other-windows-and-split)
 ;(global-set-key (kbd "") 'follow-delete-other-windows-and-split)
