@@ -146,6 +146,9 @@ There are two things you can do about this warning:
      show-paren-style 'parenthesis)  
 ;(setq default-fill-column 80);默认显示 80列
 
+;;; Winner mode
+(when (fboundp 'winner-mode)
+      (winner-mode 1))
 ;;;___________UI______________________
 (show-paren-mode 1)				
 ;显示时间
@@ -163,9 +166,6 @@ There are two things you can do about this warning:
 ;;;___________ibuffer mode______________________
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
-
-
-;(global-set-key [f11] 'toggle-full-screen)
 
 ;;;----------------------Evil plugin
 ;;; depend undo-tree
@@ -272,6 +272,7 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-x C-r") 'counsel-recentf)
 (global-set-key (kbd "C-r") 'counsel-recentf)
 (global-set-key (kbd "C-x C-p") 'ivy-switch-buffer)
+(global-set-key (kbd "C-m") 'ivy-switch-buffer)
 (global-set-key (kbd "<f1> f") 'counsel-describe-function)
 (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
 (global-set-key (kbd "<f1> l") 'counsel-find-library)
@@ -284,6 +285,8 @@ There are two things you can do about this warning:
 ;(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
 
+(global-set-key (kbd "C-c C-h") 'winner-undo)
+(global-set-key (kbd "C-c C-l") 'winner-redo)
 ;;;avy
 (global-set-key (kbd "C-3") 'avy-goto-char)
 (global-set-key (kbd "C-4") 'avy-goto-char-2)
