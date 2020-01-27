@@ -120,7 +120,8 @@ There are two things you can do about this warning:
 ;(setq-default blink-matching-delay 0.5)
 ;;;光标靠近鼠标指针时，让鼠标指针自动让开，别挡住视线
 (mouse-avoidance-mode 'animate)
-(custom-set-variables '(blink-cursor-mode nil))
+(setq blink-cursor-mode nil)
+;(custom-set-variables '(blink-cursor-mode nil))
 
 ;;;___________bookmark
 ;(setq bookmark-default-file (concat os-etc-path "emacs.bmk"))
@@ -128,7 +129,8 @@ There are two things you can do about this warning:
 ;(setq bookmark-save-flag 1)
 
 ;;;___________view
-;;;(line-number-mode t)                     ;; show line numbers
+(setq display-line-numbers 'relative)
+(line-number-mode t)                     ;; show line numbers
 ;;;(column-number-mode t)                   ;; show column numbers
 (when (fboundp size-indication-mode)
   (size-indication-mode t))              ;; show file size (emacs 22+)
@@ -194,6 +196,28 @@ There are two things you can do about this warning:
 (evil-set-initial-state 'Help-mode 'emacs)
 (evil-leader/set-leader "SPC")
 
+(global-evil-tabs-mode t)
+(define-key evil-normal-state-map (kbd "C-0") (lambda() (interactive) (elscreen-goto 0)))
+(define-key evil-normal-state-map (kbd "C-1") (lambda() (interactive) (elscreen-goto 1)))
+(define-key evil-normal-state-map (kbd "C-2") (lambda() (interactive) (elscreen-goto 2)))
+(define-key evil-normal-state-map (kbd "C-3") (lambda() (interactive) (elscreen-goto 3)))
+(define-key evil-normal-state-map (kbd "C-4") (lambda() (interactive) (elscreen-goto 4)))
+(define-key evil-normal-state-map (kbd "C-5") (lambda() (interactive) (elscreen-goto 5)))
+(define-key evil-normal-state-map (kbd "C-6") (lambda() (interactive) (elscreen-goto 6)))
+(define-key evil-normal-state-map (kbd "C-7") (lambda() (interactive) (elscreen-goto 7)))
+(define-key evil-normal-state-map (kbd "C-8") (lambda() (interactive) (elscreen-goto 8)))
+(define-key evil-normal-state-map (kbd "C-9") (lambda() (interactive) (elscreen-goto 9)))
+(define-key evil-insert-state-map (kbd "C-0") (lambda() (interactive) (elscreen-goto 0)))
+(define-key evil-insert-state-map (kbd "C-1") (lambda() (interactive) (elscreen-goto 1)))
+(define-key evil-insert-state-map (kbd "C-2") (lambda() (interactive) (elscreen-goto 2)))
+(define-key evil-insert-state-map (kbd "C-3") (lambda() (interactive) (elscreen-goto 3)))
+(define-key evil-insert-state-map (kbd "C-4") (lambda() (interactive) (elscreen-goto 4)))
+(define-key evil-insert-state-map (kbd "C-5") (lambda() (interactive) (elscreen-goto 5)))
+(define-key evil-insert-state-map (kbd "C-6") (lambda() (interactive) (elscreen-goto 6)))
+(define-key evil-insert-state-map (kbd "C-7") (lambda() (interactive) (elscreen-goto 7)))
+(define-key evil-insert-state-map (kbd "C-8") (lambda() (interactive) (elscreen-goto 8)))
+(define-key evil-insert-state-map (kbd "C-9") (lambda() (interactive) (elscreen-goto 9)))
+
 ;;; evil state cursor
 (setq evil-emacs-state-cursor '((hbar . 2) "red"))
 (setq evil-normal-state-cursor '(box   "yellow"))
@@ -205,8 +229,11 @@ There are two things you can do about this warning:
 ;;; combine with helm buffer list `C-x b`
 ;;; default `ibuffer list `C-x C-b`
 ;;; evil builtin buffer-switch `C-^`
-(global-set-key (kbd "M-n") 'evil-next-buffer)
-(global-set-key (kbd "M-p") 'evil-prev-buffer)
+(global-set-key (kbd "M-n") 'previous-buffer)
+(global-set-key (kbd "M-p") 'next-buffer)
+(global-set-key (kbd "C-x C-x") 'evil-switch-to-windows-last-buffer)
+(global-set-key (kbd "C-x C-m") 'ivy-switch-buffer)
+
 
 ;(global-set-key (kbd "C-") 'evil-scroll-up)
 
@@ -226,7 +253,7 @@ There are two things you can do about this warning:
 (evil-leader/set-key "r" 'counsel-recentf)
 (evil-leader/set-key "f" 'counsel-find-file)
 (evil-leader/set-key "d" 'find-name-dired)
-(evil-leader/set-key "b" 'ibuffer)
+(evil-leader/set-key "b" 'ivy-switch-buffer)
 (evil-leader/set-key "i" 'info)
 (evil-leader/set-key "k" 'kill-buffer)
 ;(evil-leader/set-key-for-mode 'emacs-lisp-mode "b" 'byte-compile-file)
@@ -271,7 +298,6 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "C-x C-r") 'counsel-recentf)
 (global-set-key (kbd "C-r") 'counsel-recentf)
-(global-set-key (kbd "C-x C-p") 'ivy-switch-buffer)
 (global-set-key (kbd "C-m") 'ivy-switch-buffer)
 (global-set-key (kbd "<f1> f") 'counsel-describe-function)
 (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
@@ -322,10 +348,14 @@ There are two things you can do about this warning:
 					  (:endgroup . nil)
 					  ))
 
-  ;;;(org-babel-do-load-languages 'org-babel-load-languages '((csharp . t)))
-  ;;;(setq org-default-notes-file "e:\\hunter\\Dev\\org\\capture.org")
-(setq os-capture-path "e:\\hunter\\DEV\\my-mind\\org")
-(setq org-default-notes-file "e:\\hunter\\Dev\\my-mind\\org\\my-capture.org")
+;;;(org-babel-do-load-languages 'org-babel-load-languages '((csharp . t)))
+;;;(setq org-default-notes-file "e:\\hunter\\Dev\\org\\capture.org")
+(cl-case system-type
+  ('windows-nt (setq os-capture-path "e:\\hunter\\DEV\\my-mind\\org\\"))
+  ('gnu/linux (setq os-capture-path "/home/hunter/work/my-mind/org/"))
+  ('darwin (setq os-capture-path "todo")))
+
+(setq org-default-notes-file (concat os-capture-path "my-capture.org")
 
 (setq org-capture-templates
 	  '(("l" "Log" entry (file+headline (concat os-capture-path "log.org") "Logs")
@@ -556,7 +586,6 @@ Version 2019-11-04"
 
 (global-set-key (kbd "C-`") 'set-mark-command)
 ;(global-set-key (kbd "C-1") `linum-mode)
-(setq display-line-numbers 'relative)
 		
 (global-set-key (kbd "<f11>") 'follow-delete-other-windows-and-split)
 ;(global-set-key (kbd "") 'follow-delete-other-windows-and-split)
@@ -596,7 +625,10 @@ Version 2019-11-04"
 
 ;;; writeroom
 ;package-install
-(setq writeroom-width 90)
+(setq writeroom-width 96)
+(setq writeroom--mode-line-showing t)
+(add-hook 'org-mode-hook 'writeroom-mode)
+(add-hook 'Markdown-mode-hook 'writeroom-mode)
 
 ;;; projectile
 (require 'projectile)
@@ -608,3 +640,7 @@ Version 2019-11-04"
 
 ;;; c#
 (add-hook 'csharp-mode-hook 'omnisharp-mode)
+
+;;; python
+
+(elpy-enable)
