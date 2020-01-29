@@ -59,7 +59,9 @@
 
 
 ;;;----------------------Melpa Repo
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+(if (version< emacs-version "26.3")
+    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -194,6 +196,7 @@ There are two things you can do about this warning:
 (evil-set-initial-state 'dired-mode 'emacs)
 (evil-set-initial-state 'XREF-mode 'emacs)
 (evil-set-initial-state 'Help-mode 'emacs)
+(evil-set-initial-state 'Calculator-mode 'emacs)
 (evil-leader/set-leader "SPC")
 
 (global-evil-tabs-mode t)
@@ -355,7 +358,7 @@ There are two things you can do about this warning:
   ('gnu/linux (setq os-capture-path "/home/hunter/work/my-mind/org/"))
   ('darwin (setq os-capture-path "todo")))
 
-(setq org-default-notes-file (concat os-capture-path "my-capture.org")
+(setq org-default-notes-file (concat os-capture-path "my-capture.org"))
 
 (setq org-capture-templates
 	  '(("l" "Log" entry (file+headline (concat os-capture-path "log.org") "Logs")
@@ -386,9 +389,7 @@ There are two things you can do about this warning:
 (setf org-todo-keyword-faces '(("TODO" . (:foreground "white" :background "#95A5A6"   :weight bold))
                                ("PAUSED" . (:foreground "white" :background "#2E8B57"  :weight bold))
                                ("DONE" . (:foreground "white" :background "#3498DB" :weight bold))
-("archived" . (:foreground "white" :background "#00CC66" :weight bold))
-		
-))
+			       ("archived" . (:foreground "white" :background "#00CC66" :weight bold))))
 ;  (setq-default frame-title-format "%b (%f)")
 
 ;tex
@@ -579,7 +580,27 @@ Version 2019-11-04"
 
 ;;; dracula : dark theme for many app, protable
 ;;; package-install : dracula-theme
-;(load-theme 'dracula t)
+;
+
+
+(defun user-select-theme (c)
+  "Prompt user to enter a char, for custom load theme."
+  (interactive "cEnter theme char,light 1,2,3,4 ----> darker:")
+  (cond ((string= 'c "b") (load-theme 'light-blue t))
+		((string= 'c "c") (load-theme 'dracula t))
+		((string= 'c "d") (load-theme 'deeper-blue t))
+		((string= 'c "a") (set-background-color "#C7C6C6"))))
+(set-background-color "#C7C6C6")
+
+(defun my-resize-margins ()
+  (interactive)
+  (let ((margin-size (/ (- (frame-width) 140) 2)))
+    (set-window-margins nil margin-size margin-size)))
+(defun my-restore-margins ()
+  (interactive)
+  (set-window-margins nil 0 0))
+(global-set-key (kbd "C-c C-c C-l") 'my-resize-margins)
+(global-set-key (kbd "C-c C-c C-h") 'my-restore-margins)
 
 ;;; quiet, please! No dinging!
 (setq visible-bell nil)
@@ -627,8 +648,6 @@ Version 2019-11-04"
 ;package-install
 (setq writeroom-width 96)
 (setq writeroom--mode-line-showing t)
-(add-hook 'org-mode-hook 'writeroom-mode)
-(add-hook 'Markdown-mode-hook 'writeroom-mode)
 
 ;;; projectile
 (require 'projectile)
