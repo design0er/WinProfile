@@ -199,7 +199,15 @@ There are two things you can do about this warning:
 (evil-set-initial-state 'Calculator-mode 'emacs)
 (evil-leader/set-leader "SPC")
 
+;;;todo:not work
+(eval-after-load "evil-mode" '(define-key evil-normal-state-map (kbd "C-o") nil))
+
 (global-evil-tabs-mode t)
+(global-unset-key "\C-t")
+(global-unset-key "\C-l")
+(global-unset-key "\C-o")
+(global-set-key "\C-l\C-l" 'recenter-top-bottom)
+(setq elscreen-prefix-key "\C-l")
 (define-key evil-normal-state-map (kbd "C-0") (lambda() (interactive) (elscreen-goto 0)))
 (define-key evil-normal-state-map (kbd "C-1") (lambda() (interactive) (elscreen-goto 1)))
 (define-key evil-normal-state-map (kbd "C-2") (lambda() (interactive) (elscreen-goto 2)))
@@ -599,13 +607,13 @@ Version 2019-11-04"
 (defun my-restore-margins ()
   (interactive)
   (set-window-margins nil 0 0))
-(global-set-key (kbd "C-c C-c C-l") 'my-resize-margins)
-(global-set-key (kbd "C-c C-c C-h") 'my-restore-margins)
+(global-set-key (kbd "C--") 'my-resize-margins)
+(global-set-key (kbd "C-=") 'my-restore-margins)
 
 ;;; quiet, please! No dinging!
 (setq visible-bell nil)
 
-(global-set-key (kbd "C-`") 'set-mark-command)
+(global-set-key (kbd "C-;") 'set-mark-command)
 ;(global-set-key (kbd "C-1") `linum-mode)
 		
 (global-set-key (kbd "<f11>") 'follow-delete-other-windows-and-split)
