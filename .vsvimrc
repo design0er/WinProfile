@@ -1,3 +1,4 @@
+set nu
 set nocursorline
 set ignorecase smartcase    " 搜索时忽略大小写，但在有一个或以上大写字母时仍大小写敏感
 set incsearch               " 输入搜索内容时就显示搜索结果
