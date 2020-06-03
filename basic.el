@@ -171,6 +171,9 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
 
+
+;(global-set-key [f11] 'toggle-full-screen)
+
 ;;;----------------------Evil plugin
 ;;; depend undo-tree
 (add-to-list 'load-path "~/.emacs.d/undo-tree")
@@ -309,7 +312,7 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "C-x C-r") 'counsel-recentf)
 (global-set-key (kbd "C-r") 'counsel-recentf)
-(global-set-key (kbd "C-m") 'ivy-switch-buffer)
+(global-set-key (kbd "C-x C-p") 'ivy-switch-buffer)
 (global-set-key (kbd "<f1> f") 'counsel-describe-function)
 (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
 (global-set-key (kbd "<f1> l") 'counsel-find-library)
@@ -443,7 +446,10 @@ There are two things you can do about this warning:
   (dired-hide-details-mode)
   ;(dired-sort-toggle-or-edit)
   (setq dired-sort-map (make-sparse-keymap))
-  ;(define-key dired-mode-map "s" dired-sort-map)
+  (define-key dired-mode-map "s" dired-sort-map)
+  (define-key dired-sort-map "d"
+              '(lambda () "Toggle details mode"
+                (interactive) (dired-hide-details-mode)))
   (define-key dired-sort-map "s"
               '(lambda () "sort by Size"
                 (interactive) (dired-sort-other (concat dired-listing-switches "S"))))
@@ -575,7 +581,7 @@ Version 2019-11-04"
 ;;; leuven theme
 ;;; buildin light
 ;;; good for org mode and ... 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-leuven-theme")
+;(add-to-list 'custom-theme-load-path "~/.emacs.d/emacs-leuven-theme")
 ;(load-theme 'leuven t) 
 ;(load-theme 'leuven-dark t) 
 
@@ -615,7 +621,11 @@ Version 2019-11-04"
 
 (global-set-key (kbd "C-;") 'set-mark-command)
 ;(global-set-key (kbd "C-1") `linum-mode)
-		
+
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
+(setq display-line-numbers 'relative)
+(setq display-line-numbers-type 'relative)
 (global-set-key (kbd "<f11>") 'follow-delete-other-windows-and-split)
 ;(global-set-key (kbd "") 'follow-delete-other-windows-and-split)
 (global-set-key [(ctrl f4)] 'kill-buffer)
@@ -644,7 +654,7 @@ Version 2019-11-04"
 	  flymd-close-buffer-delete-temp-files t)
 
 ;;; sr-speedbar
-(global-set-key (kbd "M-1") 'sr-speedbar-toggle)
+;(global-set-key (kbd "M-1") 'sr-speedbar-toggle)
 (setq sr-speedbar-width-x 140)
 (setq sr-speedbar-max-width 440)
 (setq speedbar-use-images nil)
@@ -664,10 +674,26 @@ Version 2019-11-04"
 (projectile-mode +1)
 
 ;;; Programming
-
+;;; company mode
+(add-hook 'after-init-hook 'global-company-mode)
 ;;; c#
 (add-hook 'csharp-mode-hook 'omnisharp-mode)
 
-;;; python
+;;; paredit for LISP
+(autoload 'enable-paredit-mode "paredit" "Turn on pseudo-structural editing of Lisp code." t)
+(add-hook 'emacs-lisp-mode-hook       #'enable-paredit-mode)
+(add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+(add-hook 'ielm-mode-hook             #'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             #'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           #'enable-paredit-mode)
+
+;;; scheme
+; geiser
+(require 'geiser)
+(setq geiser-active-implementations '(chez ))
+(setq geiser-chez-binary "/bin/chezscheme")
+(setq geiser-mode-start-repl-p t)
+(setq scheme-program-name "chez")
 
 (elpy-enable)
