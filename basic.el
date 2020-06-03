@@ -30,18 +30,24 @@
 ;;;leuven theme
 
 ;gc threshold default is 800,000 = 800kb
-(setq gc-cons-threshold 800000000)
+;(setq gc-cons-threshold 800000000)
+(when (eq system-type 'windows-nt)
+   (setq gc-cons-threshold (* 512 1024 1024))
+   (setq gc-cons-percentage 0.5)
+(run-with-idle-timer 5 t #'garbage-collect)
+;; 显示垃圾回收信息，这个可以作为调试用
+;;  (setq garbage-collection-messages t)
+)
 
 (setq debug-on-error t)
 ;(toggle-debug-on-quit)
 ;(server-start)
 
 ;;; proxy
-;(setq url-using-proxy t)
-;(setq url-proxy-services '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
-;                           ("http" . "127.0.0.1:1081")
-;			   ("https" . "127.0.0.1:1081")))
-
+(setq url-using-proxy t)
+(setq url-proxy-services '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
+                           ("http" . "127.0.0.1:1080")
+			   ("https" . "127.0.0.1:1080")))
 ;;;----------------------char coding
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -59,8 +65,9 @@
 
 
 ;;;----------------------Melpa Repo
+;It's because on Windows or Windows Subsystem Linux (WSL) the local gnutls-utils may not support TLS1.3.
 (if (version< emacs-version "26.3")
-    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+    (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.2"))
 
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -79,6 +86,8 @@ There are two things you can do about this warning:
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
+(setq package-archives '(("gnu"   . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
+                         ("melpa" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
 (package-initialize)
 
 (require 'use-package)
@@ -92,9 +101,13 @@ There are two things you can do about this warning:
 ;;(set-face-attribute 'default nil :font "Source Han Sans 10")
 ;(set-face-attribute 'default nil :font (font-spec))
 
+;Fira Code 14 + (Yahei Monaco * 1.2)
+;Cascadia Code 14 + Microsoft Yahei Mono * 1.1
+
 ;; Setting English Font
-(setq en-font-size 9)
-(set-face-attribute 'default nil :font "Fira Code 9")
+(setq inhibit-compacting-font-caches t)
+(setq en-font-size 14)
+(set-face-attribute 'default nil :font "Cascadia Code 14")
 
 ;; Chinese Font
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
@@ -208,30 +221,30 @@ There are two things you can do about this warning:
 (global-unset-key "\C-o")
 (global-set-key "\C-l\C-l" 'recenter-top-bottom)
 (setq elscreen-prefix-key "\C-l")
-(define-key evil-normal-state-map (kbd "C-0") (lambda() (interactive) (elscreen-goto 0)))
-(define-key evil-normal-state-map (kbd "C-1") (lambda() (interactive) (elscreen-goto 1)))
-(define-key evil-normal-state-map (kbd "C-2") (lambda() (interactive) (elscreen-goto 2)))
-(define-key evil-normal-state-map (kbd "C-3") (lambda() (interactive) (elscreen-goto 3)))
-(define-key evil-normal-state-map (kbd "C-4") (lambda() (interactive) (elscreen-goto 4)))
-(define-key evil-normal-state-map (kbd "C-5") (lambda() (interactive) (elscreen-goto 5)))
-(define-key evil-normal-state-map (kbd "C-6") (lambda() (interactive) (elscreen-goto 6)))
-(define-key evil-normal-state-map (kbd "C-7") (lambda() (interactive) (elscreen-goto 7)))
-(define-key evil-normal-state-map (kbd "C-8") (lambda() (interactive) (elscreen-goto 8)))
-(define-key evil-normal-state-map (kbd "C-9") (lambda() (interactive) (elscreen-goto 9)))
-(define-key evil-insert-state-map (kbd "C-0") (lambda() (interactive) (elscreen-goto 0)))
-(define-key evil-insert-state-map (kbd "C-1") (lambda() (interactive) (elscreen-goto 1)))
-(define-key evil-insert-state-map (kbd "C-2") (lambda() (interactive) (elscreen-goto 2)))
-(define-key evil-insert-state-map (kbd "C-3") (lambda() (interactive) (elscreen-goto 3)))
-(define-key evil-insert-state-map (kbd "C-4") (lambda() (interactive) (elscreen-goto 4)))
-(define-key evil-insert-state-map (kbd "C-5") (lambda() (interactive) (elscreen-goto 5)))
-(define-key evil-insert-state-map (kbd "C-6") (lambda() (interactive) (elscreen-goto 6)))
-(define-key evil-insert-state-map (kbd "C-7") (lambda() (interactive) (elscreen-goto 7)))
-(define-key evil-insert-state-map (kbd "C-8") (lambda() (interactive) (elscreen-goto 8)))
-(define-key evil-insert-state-map (kbd "C-9") (lambda() (interactive) (elscreen-goto 9)))
+;(define-key evil-normal-state-map (kbd "C-0") (lambda() (interactive) (elscreen-goto 0)))
+;(define-key evil-normal-state-map (kbd "C-1") (lambda() (interactive) (elscreen-goto 1)))
+;(define-key evil-normal-state-map (kbd "C-2") (lambda() (interactive) (elscreen-goto 2)))
+;(define-key evil-normal-state-map (kbd "C-3") (lambda() (interactive) (elscreen-goto 3)))
+;(define-key evil-normal-state-map (kbd "C-4") (lambda() (interactive) (elscreen-goto 4)))
+;(define-key evil-normal-state-map (kbd "C-5") (lambda() (interactive) (elscreen-goto 5)))
+;(define-key evil-normal-state-map (kbd "C-6") (lambda() (interactive) (elscreen-goto 6)))
+;(define-key evil-normal-state-map (kbd "C-7") (lambda() (interactive) (elscreen-goto 7)))
+;(define-key evil-normal-state-map (kbd "C-8") (lambda() (interactive) (elscreen-goto 8)))
+;(define-key evil-normal-state-map (kbd "C-9") (lambda() (interactive) (elscreen-goto 9)))
+;(define-key evil-insert-state-map (kbd "C-0") (lambda() (interactive) (elscreen-goto 0)))
+;(define-key evil-insert-state-map (kbd "C-1") (lambda() (interactive) (elscreen-goto 1)))
+;(define-key evil-insert-state-map (kbd "C-2") (lambda() (interactive) (elscreen-goto 2)))
+;(define-key evil-insert-state-map (kbd "C-3") (lambda() (interactive) (elscreen-goto 3)))
+;(define-key evil-insert-state-map (kbd "C-4") (lambda() (interactive) (elscreen-goto 4)))
+;(define-key evil-insert-state-map (kbd "C-5") (lambda() (interactive) (elscreen-goto 5)))
+;(define-key evil-insert-state-map (kbd "C-6") (lambda() (interactive) (elscreen-goto 6)))
+;(define-key evil-insert-state-map (kbd "C-7") (lambda() (interactive) (elscreen-goto 7)))
+;(define-key evil-insert-state-map (kbd "C-8") (lambda() (interactive) (elscreen-goto 8)))
+;(define-key evil-insert-state-map (kbd "C-9") (lambda() (interactive) (elscreen-goto 9)))
 
 ;;; evil state cursor
 (setq evil-emacs-state-cursor '((hbar . 2) "red"))
-(setq evil-normal-state-cursor '(box   "yellow"))
+(setq evil-normal-state-cursor '(box   "blue"))
 ;(setq evil-motion-state-cursor 'box)  ; █
 ;(setq evil-visual-state-cursor 'box)  ; █
 ;(setq evil-normal-state-cursor 'box)  ; █
@@ -321,6 +334,8 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-x l") 'counsel-locate)
 ;(global-set-key (kbd "C-S-o") 'counsel-rhythmbox)
 (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history)
+
+(setq recentf-max-saved-items 200)
 
 (global-set-key (kbd "C-c C-h") 'winner-undo)
 (global-set-key (kbd "C-c C-l") 'winner-redo)
@@ -431,7 +446,7 @@ There are two things you can do about this warning:
 ;文件管理器
 (global-set-key [f5] 'dired-jump)
 (put 'dired-find-alternate-file 'disabled nil)
-(setq dired-listing-switches "-laGh1v --group-directories-first --time-style \"+%Y-%m-%d %H:%M:%S\"")
+(setq dired-listing-switches "-lgaGh1v --group-directories-first --time-style \"+%Y-%m-%d %H:%M:%S\"")
 
 (setq directory-listing-before-filename-regexp
       (purecopy (concat "\\([0-2][0-9]:[0-5][0-9] \\)\\|"
@@ -494,7 +509,7 @@ Version 2019-11-04"
   (define-key dired-mode-map (kbd "<C-return>") 'xah-open-in-external-app)
   ;(define-key dired-mode-map "n" 'dired-subtree-insert)
   ;(define-key dired-mode-map "u" 'dired-subtree-remove)
-  (define-key dired-mode-map "i" 'xah-open-in-external-app)
+  ;(define-key dired-mode-map "o" 'xah-open-in-external-app)
   (define-key dired-mode-map "h" 'dired-up-directory)
   (define-key dired-mode-map "l" 'dired-find-alternate-file)
   (define-key dired-mode-map "k" 'dired-previous-line)
@@ -598,7 +613,9 @@ Version 2019-11-04"
 		((string= 'c "c") (load-theme 'dracula t))
 		((string= 'c "d") (load-theme 'deeper-blue t))
 		((string= 'c "a") (set-background-color "#C7C6C6"))))
-(set-background-color "#C7C6C6")
+;(set-background-color "#ffffff")
+;(set-background-color "#C7C6C6")
+(set-background-color "#EAEAEA")
 
 (defun my-resize-margins ()
   (interactive)
@@ -658,10 +675,10 @@ Version 2019-11-04"
 (setq writeroom--mode-line-showing t)
 
 ;;; projectile
-(require 'projectile)
-(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-(projectile-mode +1)
+;(require 'projectile)
+;(define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+;(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+;(projectile-mode +1)
 
 ;;; Programming
 
