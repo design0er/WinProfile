@@ -104,21 +104,25 @@ There are two things you can do about this warning:
 ;Fira Code 14 + (Yahei Monaco * 1.2)
 ;Cascadia Code 14 + Microsoft Yahei Mono * 1.1
 
+;;debian10 ssh x-forwarding:(fira code 12 VS WenQuanYi Zen Hei Mono 1.3) fine.
+
 ;; Setting English Font
 (setq inhibit-compacting-font-caches t)
 (setq en-font-size 14)
 (set-face-attribute 'default nil :font "Cascadia Code 14")
 
+(if (display-graphic-p)
+  (progn
 ;; Chinese Font
 (dolist (charset '(kana han symbol cjk-misc bopomofo))
   (set-fontset-font (frame-parameter nil 'font)
                     charset (font-spec :family "WenQuanYi Zen Hei Mono")))
-(setq face-font-rescale-alist '(("WenQuanYi Zen Hei Mono" . 1.2)("微软雅黑" . 1.2)("Microsoft Yahei" . 1.2) ))
+(setq face-font-rescale-alist '(("WenQuanYi Zen Hei Mono" . 1.3)("微软雅黑" . 1.2)("Microsoft Yahei" . 1.2) ))
 
 ;;; italic
 (set-face-font 'italic (font-spec :family "Source Code Pro" :slant 'italic :weight 'normal :size (+ 0.0 en-font-size)))
 (set-face-font 'bold-italic (font-spec :family "Source Code Pro" :slant 'italic :weight 'bold :size (+ 0.0 en-font-size)))
-
+))
 (global-font-lock-mode 1)  
 
 ;;;使用C-k 包含回车符
@@ -348,6 +352,9 @@ There are two things you can do about this warning:
 (global-set-key (kbd "C-2") 'avy-goto-line)
 
 ;;;org mode
+(require 'ox)
+(require 'ox-org)
+(require 'org-mind-map)
 (require 'org)
 (setq org-image-actual-width nil)
 
