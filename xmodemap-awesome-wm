@@ -1,0 +1,5 @@
+clear Mod4
+clear Mod5
+!add Mod4 = Alt_R
+add Mod4 = Super_L Super_R
+add Mod5 = Alt_R
