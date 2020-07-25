@@ -22,6 +22,8 @@
 					 flycheck
 					 elpy
 					 geiser
+					 graphviz-dot-mode
+					 xclip
 					 paredit))
 (dolist (p my-packages) (print p))
 (dolist (p my-packages) (package-install p))

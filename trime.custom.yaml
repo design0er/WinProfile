@@ -5,13 +5,86 @@ customization:
   modified_time: "Fri Feb  8 14:00:39 2019"
   rime_version: 1.2.9
 patch:
+  "preset_keys/date_time":
+    command: date
+    label: time
+    option: "yyyy-MM-dd HH:mm:ss"
+    send: function
+  "preset_keys/Control_C":
+    label: "C-c"
+    send: "Control+c"
+  "preset_keys/Control_D":
+    label: "C-d"
+    send: "Control+d"
+  "preset_keyboards/terra_pinyin":
+    ascii_mode: 0
+    author: design0er
+    keys:
+      # nav
+      - {click: Left, long_click: Home, width: 15, height: 40, key_back_color: color_nav}
+      - {click: Up, long_click: Page_Up, width: 13, key_back_color: color_nav}
+      - {click: Shift_L, long_click: Keyboard_xkey, width: 15, key_back_color: color_menu}
+      - {click: Mode_switch, long_click: Menu, width: 14, key_back_color: color_menu}
+      - {click: Keyboard_symbols, long_click: Keyboard_number, width: 14, key_back_color: color_menu}
+      - {click: Down, long_click: Page_Down, width: 13, key_back_color: color_nav}
+      - {click: Right,long_click: End, width: 15, key_back_color: color_nav}
+      # number
+      - {click: 1, long_click: "!"}
+      - {click: 2, long_click: "@"}
+      - {click: 3, long_click: "#"}
+      - {click: 4, long_click: "$"}
+      - {click: 5, long_click: "%"}
+      - {click: 6, long_click: "^"}
+      - {click: 7, long_click: "&"}
+      - {click: 8 , long_click: "*"}
+      - {click: 9, long_click: "-" }
+      - {click: 0, long_click: "+" }
+      # qwerty
+      - {click: q, long_click: _}
+      - {click: w, long_click: "="}
+      - {click: e, long_click: "\\"}
+      - {click: r, long_click: "|"}
+      - {click: t, long_click: ";"}
+      - {click: y, long_click: Date}
+      - {click: u, long_click: "~"}
+      - {click: i, long_click: Insert}
+      - {click: o, long_click: " "}
+      - {click: p, long_click: "."}
+      # asdf
+      - {width: 4}
+      - {click: a, long_click: select_all, key_back_color: color_cua}
+      - {click: s, long_click: Time}
+      - {click: d, long_click: Delete}
+      - {click: f, long_click: "/"}
+      - {click: g, long_click: Escape}
+      - {click: h, long_click: ":"}
+      - {click: j, long_click: "'"}
+      - {click: k, long_click: '"'}
+      - {click: l, long_click: "`"}
+      - {width: 2}
+      # ;zxcvb
+      - {width: 10}
+      - {click: z}
+      - {click: x, long_click: cut, key_back_color: color_cua}
+      - {click: c, long_click: copy, key_back_color: color_cua}
+      - {click: v, long_click: paste, key_back_color: color_cua}
+      - {click: b, long_click: Tab}
+      - {click: n, long_click: VOICE_ASSIST}
+      - {click: m, long_click: " "}
+      - {click: ";", long_click: "?", send_bindings: false, width: 11}
+      - {width: 4}
+      # menu && enter
+      - {click: BackSpace, width: 26, height: 42, key_back_color: color_bs}
+      - {click: space, width: 44, long_click: Keyboard_hackey, key_back_color: color_space}
+      - {click: Return, long_click: CommitComment, width: 27, key_back_color: color_enter}
+    name: "Pinyin-Custom"
   "present_keyboards/double_pinyin_mspy/import_preset": terra_pinyin
 # 1、新建一个键盘布局xkey  
   "preset_keyboards/xkey":  #布局ID  
     author: "xq"   #作者  
     name: "数字+操作键"  #方便自己辨识的名字  
     ascii_mode: 1 #默认进入英文状态  
-    height: 44   #每行高度  
+    height: 42   #每行高度  
     width: 11   #按键默认宽度（取所有按键中用得较多的宽度值，接下来就可以少写一些width了）  
     keys:   #按键排列  
       # 第一行  
@@ -67,8 +140,8 @@ patch:
     keys:   #按键排列  
       # 第一行  
       - {click: Escape }  
-      - {click: Control_L}  
-      - {click: Shift_L}  
+      - {click: Control_C}  
+      - {click: Control_D}
       - {click: Alt_L, width: 13}  
       - {click: Tab, width: 18}  
       - {click: "\\", width: 18}  
@@ -85,22 +158,22 @@ patch:
       - {click: Left}  
       - {click: Tab}  
       - {click: Right}  
-      - {click: "×", width: 13}  
+      - {click: Insert , width: 13}  
       - {click: "`", width: 18}  
       - {click: ":", width: 18}  
       - {click: ".", width: 18}  
       # 第四行  
-      - {click: Home}  
+      - {click: "{"}  
       - {click: Down}  
-      - {click: End}  
-      - {click: "÷", width: 13}  
+      - {click: "}"}  
+      - {click: Delete, width: 13}  
       - {click: ",", width: 18}  
       - {click: Caps_Lock, width: 18}  
       - {click: BackSpace, width: 18}  
       # 第五行  
       - {click: Keyboard_default, long_click: Menu, width: 18}  
       - {click: "±", width: 14.9} #如果上下的按键没有严格对齐，可以微调宽度  
-      - {click: "=", width: 13}  
+      - {click: '\\', width: 13}  
       - {click: Space, width: 18}  
       - {click: ., width: 18}  
       - {click: Return, width: 18}  
@@ -108,3 +181,15 @@ patch:
     label: HHK    #按键标签  
     send: Eisu_toggle  #执行切换键盘命令  
     select: hackey   #选择xkey键盘  
+  "preset_color_schemes/hunter_dark":  
+    name: Hunter's Dark Theme
+    back_color: 0x101f27
+    text_color: 0xffffff 
+    key_back_color: 0x37464f  
+    hilited_candidate_back_color: 0xff77a9
+    color_nav: 0x00695c
+    color_cua: 0x255d00
+    color_menu: 0x005b9f
+    color_bs: 0x870000
+    color_enter: 0xc17900
+    color_space: 0x62727b
